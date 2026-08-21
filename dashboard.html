@@ -7,66 +7,24 @@
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
     body { background: #f7f5ef; color: #171717; }
-
-    /* SIDEBAR */
-    .sidebar {
-        position: fixed; left: 0; top: 0; width: 285px; height: 100vh;
-        background: #08090b; color: white; padding: 20px 18px;
-        display: flex; flex-direction: column; overflow-y: auto; justify-content: space-between;
-    }
+    .sidebar { position: fixed; left: 0; top: 0; width: 285px; height: 100vh; background: #08090b; color: white; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; z-index: 100; }
     .logo { text-align: center; margin-bottom: 20px; }
     .logo-dc { color: #d5a22b; font-size: 58px; font-weight: 900; letter-spacing: -5px; }
     .logo-name { font-size: 20px; font-weight: bold; margin-top: -5px; }
     .logo-name span { color: #d5a22b; }
-    .logo-subtitle { font-size: 10px; letter-spacing: 3px; color: #cfcfcf; margin-top: 8px; }
-
     .menu { display: flex; flex-direction: column; gap: 10px; }
-    .menu a {
-        color: white; text-decoration: none; padding: 15px 18px; border-radius: 12px;
-        font-size: 16px; display: flex; align-items: center; gap: 15px; cursor: pointer;
-    }
-    .menu a:hover { background: #1d1a13; }
-    .menu a.active { background: linear-gradient(135deg, #a9760d, #dfae37); }
-    .menu-icon { width: 28px; text-align: center; font-size: 21px; }
-
-    .divider { height: 1px; background: #303030; margin: 25px 8px; }
-
-    /* MAIN AREA */
+    .menu button { background: none; border: none; width: 100%; text-align: left; color: white; padding: 15px 18px; border-radius: 12px; font-size: 16px; display: flex; align-items: center; gap: 15px; cursor: pointer; }
+    .menu button:hover { background: #1d1a13; }
+    .menu button.active { background: linear-gradient(135deg, #a9760d, #dfae37); }
     .main { margin-left: 285px; min-height: 100vh; padding: 35px 50px; }
     .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 45px; }
-    .header-title h1 { font-size: 38px; letter-spacing: 1px; text-align: center; flex: 1; }
-    .header-title p { color: #b58418; margin-top: 9px; font-size: 16px; letter-spacing: 3px; text-align: center; }
-
-    .profile { display: flex; align-items: center; gap: 12px; }
-    .profile-picture {
-        width: 58px; height: 58px; border-radius: 50%; background: #e7d7ad;
-        border: 2px solid #c49725; display: flex; align-items: center; justify-content: center; font-size: 25px;
-    }
-    .profile-name { font-size: 15px; font-weight: bold; }
-    .profile-role { font-size: 12px; color: #a67b1b; margin-top: 4px; }
-
-    /* LESSONS */
     .lessons { max-width: 1100px; margin: auto; }
-    .lesson {
-        background: white; border-radius: 17px; padding: 23px 27px; margin-bottom: 16px;
-        display: flex; align-items: center; gap: 22px; border: 1px solid #eee;
-        box-shadow: 0 5px 18px rgba(0,0,0,0.06); cursor: pointer; transition: 0.2s;
-    }
-    .lesson:hover { transform: translateX(5px); box-shadow: 0 8px 25px rgba(0,0,0,0.10); }
-    .lesson-icon { width: 62px; height: 62px; border-radius: 15px; background: #fbf5e5; display: flex; align-items: center; justify-content: center; font-size: 29px; flex-shrink: 0; }
-    .lesson-content { flex: 1; }
-    .lesson-content h3 { font-size: 18px; margin-bottom: 7px; }
-    .lesson-content p { font-size: 13px; color: #777; }
-    .lesson-arrow { color: #c39422; font-size: 22px; }
-
-    /* ADMIN VIEW STYLES */
+    .lesson { background: white; border-radius: 17px; padding: 23px 27px; margin-bottom: 16px; display: flex; align-items: center; gap: 22px; border: 1px solid #eee; box-shadow: 0 5px 18px rgba(0,0,0,0.06); cursor: pointer; }
     .admin-only { display: none; }
     .admin-panel-container { max-width: 1100px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 18px rgba(0,0,0,0.06); }
     .code-generator-box { background: #f9f9f9; padding: 20px; border-radius: 10px; border: 1px solid #e0e0e0; margin-bottom: 25px; }
-    .code-generator-box input { padding: 12px; margin-right: 10px; border: 1px solid #ccc; border-radius: 6px; width: 250px; font-size: 14px; margin-bottom: 10px; }
+    .code-generator-box input { padding: 12px; margin-right: 10px; border: 1px solid #ccc; border-radius: 6px; width: 250px; margin-bottom: 10px; }
     .code-generator-box button { padding: 12px 20px; background: #b58418; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-    .code-generator-box button:hover { background: #9a6d13; }
-    
     table { width: 100%; border-collapse: collapse; margin-top: 15px; }
     th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
     th { background: #b58418; color: white; }
@@ -74,140 +32,60 @@
 </head>
 <body>
 
-    <!-- SIDEBAR -->
     <div class="sidebar">
         <div>
             <div class="logo">
                 <div class="logo-dc">DC</div>
                 <div class="logo-name">SOCIAL <span>ACADEMY</span></div>
-                <div class="logo-subtitle">LEARN • GROW • SUCCEED</div>
             </div>
-
             <div class="menu">
-                <a href="#" onclick="showStudentView()" id="menu-home" class="active"><span class="menu-icon">🏠</span> Home</a>
-                <!-- Lalabas lang ito kapag nag-log in bilang admin -->
-                <a href="#" onclick="showAdminView()" id="admin-menu" class="admin-only"><span class="menu-icon">⚙️</span> Manage Students</a>
+                <button onclick="showStudentView()" id="menu-home" class="active">🏠 Home</button>
+                <button onclick="showAdminView()" id="admin-menu" class="admin-only">⚙️ Manage Students</button>
             </div>
-
-            <div class="divider"></div>
-
+            <div style="height: 1px; background: #303030; margin: 25px 0;"></div>
             <div class="menu">
-                <a href="#" onclick="logoutUser()"><span class="menu-icon">➔</span> Logout</a>
+                <button onclick="logoutUser()">➔ Logout</button>
             </div>
-        </div>
-
-        <div class="partner" style="border: 1px solid #d4af37; border-radius: 14px; padding: 12px; text-align: center; background: #0d0d0d;">
-            <div style="font-size: 24px; color: #e5ad35;">♛</div>
-            <div style="font-size: 11px; color: #fff;">ACADEMY PARTNER</div>
         </div>
     </div>
 
-    <!-- MAIN AREA -->
     <div class="main">
         <div class="header">
-            <div class="header-title">
-                <h1>DC SOCIAL ACADEMY</h1>
-                <p>LEARN, GROW & SUCCEED</p>
-            </div>
-
-            <div class="profile">
-                <div class="profile-picture">👤</div>
-                <div>
-                    <div class="profile-name" id="display-name">Academy User</div>
-                    <div class="profile-role" id="display-role">Academy Partner</div>
-                </div>
+            <h1>DC SOCIAL ACADEMY</h1>
+            <div>
+                <b id="display-name">Academy User</b><br>
+                <span id="display-role" style="color: #b58418; font-size: 13px;">Academy Partner</span>
             </div>
         </div>
 
-        <!-- 1. STUDENT LESSONS VIEW -->
+        <!-- HOME VIEW -->
         <div id="student-dashboard-view">
-            <div style="max-width: 1100px; margin: 0 auto 25px;">
-                <h2>Welcome back! 👋</h2>
-                <p style="margin-top: 7px; color: #777;">Continue your learning journey.</p>
-            </div>
-
-            <div class="lessons">
+            <h2>Welcome back! 👋</h2>
+            <div class="lessons" style="margin-top: 20px;">
                 <div class="lesson" onclick="window.location.href='ads.html'">
-                    <div class="lesson-icon">📢</div>
-                    <div class="lesson-content">
-                        <h3>HOW TO CREATE ADS</h3>
-                        <p>Learn how to create effective advertisements.</p>
-                    </div>
-                    <div class="lesson-arrow">❯</div>
-                </div>
-
-                <div class="lesson" onclick="window.location.href='portfolio.html'">
-                    <div class="lesson-icon">💼</div>
-                    <div class="lesson-content">
-                        <h3>HOW TO CREATE PORTFOLIO</h3>
-                        <p>Learn how to create your professional portfolio.</p>
-                    </div>
-                    <div class="lesson-arrow">❯</div>
-                </div>
-
-                <div class="lesson" onclick="window.location.href='ai-photo.html'">
-                    <div class="lesson-icon">🖼️</div>
-                    <div class="lesson-content">
-                        <h3>HOW TO CREATE AI PHOTO</h3>
-                        <p>Learn how to create high-quality AI photos.</p>
-                    </div>
-                    <div class="lesson-arrow">❯</div>
-                </div>
-
-                <div class="lesson" onclick="window.location.href='ai-video.html'">
-                    <div class="lesson-icon">🎬</div>
-                    <div class="lesson-content">
-                        <h3>HOW TO TURN YOUR VIDEO INTO AI VIDEO</h3>
-                        <p>Learn how to transform your videos using AI.</p>
-                    </div>
-                    <div class="lesson-arrow">❯</div>
-                </div>
-                
-                <div class="lesson" onclick="window.location.href='content-creation.html'">
-                    <div class="lesson-icon">📝</div>
-                    <div class="lesson-content">
-                        <h3>ALL ABOUT CONTENT CREATION</h3>
-                        <p>Learn how to create engaging content that attracts attention, builds your brand, and grows your audience.</p>
-                    </div>
-                    <div class="lesson-arrow">❯</div>
+                    <h3>📢 HOW TO CREATE ADS</h3>
+                    <p>Learn how to create effective advertisements.</p>
                 </div>
             </div>
         </div>
 
-        <!-- 2. ADMIN MANAGEMENT VIEW -->
+        <!-- ADMIN VIEW -->
         <div id="admin-dashboard-view" class="admin-only">
             <div class="admin-panel-container">
                 <h2>Admin Control Center</h2>
-                <p style="color: #777; margin-bottom: 20px;">Dito ka gagawa ng Code at PIN para sa mga estudyante.</p>
-
-                <!-- CODE GENERATOR BOX -->
-                <div class="code-generator-box">
-                    <h3 style="margin-bottom: 12px;">Mag-generate ng Bagong Code & PIN</h3>
-                    <div>
-                        <input type="text" id="gen-code" placeholder="10-Char Code (e.g. DCHWUWB454)"><br>
-                        <input type="text" id="gen-pin" placeholder="10-Char PIN (e.g. HWOWHDBLWB)"><br>
-                        <button onclick="generateNewAccessCode()">I-save ang Code at PIN</button>
-                    </div>
+                <div class="code-generator-box" style="margin-top: 15px;">
+                    <h3>Mag-generate ng Bagong Code & PIN</h3>
+                    <input type="text" id="gen-code" placeholder="10-Char Code"><br>
+                    <input type="text" id="gen-pin" placeholder="10-Char PIN"><br>
+                    <button onclick="generateNewAccessCode()">I-save ang Code at PIN</button>
                 </div>
-
-                <h3>Listahan ng mga Naka-register na Estudyante</h3>
+                <h3>Listahan ng mga Estudyante</h3>
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Pangalan</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>CP Number</th>
-                            <th>Code na Ginamit</th>
-                        </tr>
-                    </thead>
-                    <tbody id="admin-student-list">
-                        <!-- Papasok dito ang listahan -->
-                    </tbody>
+                    <thead><tr><th>Pangalan</th><th>Username</th><th>Email</th><th>CP</th><th>Code</th></tr></thead>
+                    <tbody id="admin-student-list"></tbody>
                 </table>
             </div>
         </div>
-
     </div>
 
 <script>
@@ -245,22 +123,13 @@
     function generateNewAccessCode() {
         const code = document.getElementById('gen-code').value.trim();
         const pin = document.getElementById('gen-pin').value.trim();
+        if(!code || !pin) { alert("Pakisagutan ang parehong Code at PIN!"); return; }
 
-        if(!code || !pin) {
-            alert("Pakisagutan ang parehong Code at PIN!");
-            return;
-        }
+        let codes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
+        if(codes.some(item => item.code === code)) { alert("Umiiral na ang code na ito!"); return; }
 
-        let generatedCodes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
-        
-        if(generatedCodes.some(item => item.code === code)) {
-            alert("Umiiral na ang code na ito!");
-            return;
-        }
-
-        generatedCodes.push({ code, pin });
-        localStorage.setItem('generated_codes', JSON.stringify(generatedCodes));
-
+        codes.push({ code, pin });
+        localStorage.setItem('generated_codes', JSON.stringify(codes));
         alert("Tagumpay! Na-save na ang Code at PIN.");
         document.getElementById('gen-code').value = '';
         document.getElementById('gen-pin').value = '';
@@ -270,22 +139,12 @@
         const users = JSON.parse(localStorage.getItem('academy_users') || '[]');
         const tbody = document.getElementById('admin-student-list');
         tbody.innerHTML = '';
-
         if(users.length === 0) {
             tbody.innerHTML = <tr><td colspan="5" style="text-align: center; color: #777;">Wala pang estudyanteng nag-register.</td></tr>;
             return;
         }
-
         users.forEach(u => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><b>${u.name}</b></td>
-                <td>${u.username}</td>
-                <td>${u.email}</td>
-                <td>${u.cp}</td>
-                <td><b>${u.codeUsed}</b></td>
-            `;
-            tbody.appendChild(tr);
+            tbody.innerHTML += <tr><td><b>${u.name}</b></td><td>${u.username}</td><td>${u.email}</td><td>${u.cp}</td><td><b>${u.codeUsed}</b></td></tr>;
         });
     }
 
