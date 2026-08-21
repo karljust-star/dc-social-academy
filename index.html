@@ -8,15 +8,18 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
     body { background: #08090b; display: flex; justify-content: center; align-items: center; height: 100vh; color: white; }
     .login-box { background: #141619; padding: 40px; border-radius: 20px; width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #333; }
-    .logo { text-align: center; margin-bottom: 30px; }
+    .logo { text-align: center; margin-bottom: 25px; }
     .logo-dc { color: #d5a22b; font-size: 60px; font-weight: 900; letter-spacing: -5px; }
     .logo-name { font-size: 20px; font-weight: bold; margin-top: -5px; }
     .logo-name span { color: #d5a22b; }
-    .input-group { margin-bottom: 20px; }
-    .input-group label { display: block; font-size: 14px; margin-bottom: 8px; color: #ccc; }
+    .input-group { margin-bottom: 18px; }
+    .input-group label { display: block; font-size: 14px; margin-bottom: 6px; color: #ccc; }
     .input-group input { width: 100%; padding: 12px 15px; background: #1f2329; border: 1px solid #444; border-radius: 8px; color: white; font-size: 15px; }
-    .btn { width: 100%; padding: 12px; background: #d5a22b; border: none; border-radius: 8px; color: black; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+    .btn { width: 100%; padding: 12px; background: #d5a22b; border: none; border-radius: 8px; color: black; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 5px; }
     .btn:hover { background: #e6b135; }
+    .register-link { text-align: center; margin-top: 20px; font-size: 14px; color: #aaa; }
+    .register-link a { color: #d5a22b; text-decoration: none; font-weight: bold; }
+    .register-link a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -32,16 +35,25 @@
             <input type="text" id="username" placeholder="Enter username">
         </div>
         <div class="input-group">
-            <label>Password</label>
-            <input type="password" id="password" placeholder="Enter password">
+            <label>Password / PIN</label>
+            <input type="password" id="password" placeholder="Enter password or PIN">
         </div>
         <button class="btn" onclick="login()">Login</button>
+        
+        <div class="register-link">
+            Wala pang account? <a href="register.html">Gumawa dito</a>
+        </div>
     </div>
 
 <script>
     function login() {
         const user = document.getElementById('username').value.trim();
         const pass = document.getElementById('password').value.trim();
+
+        if(!user || !pass) {
+            alert("Pakilagay ang username at password!");
+            return;
+        }
 
         // Check kung Admin ang nag-login
         if(user === 'admin134h' && pass === 'adminpassword123') {
@@ -51,9 +63,11 @@
             return;
         }
 
-        // Check kungregistered student
-        let users = JSON.parse(localStorage.getItem('academy_users') || '[]');
-        let foundUser = users.find(u => u.username === user && u.pin === pass);
+        // Check kung registered student
+        let data = JSON.parse(localStorage.getItem('academy_users') || '{"users":[]}');
+        let usersList = Array.isArray(data) ? data : (data.users || []);
+        
+        let foundUser = usersList.find(u => u.username === user && u.pin === pass);
 
         if(foundUser) {
             localStorage.setItem('current_user', JSON.stringify(foundUser));

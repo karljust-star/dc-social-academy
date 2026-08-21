@@ -6,130 +6,99 @@
 <title>Admin Dashboard - DC Social Academy</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-    body { background: #f7f5ef; color: #171717; }
-    .sidebar { position: fixed; left: 0; top: 0; width: 285px; height: 100vh; background: #08090b; color: white; padding: 20px 18px; z-index: 9999; display: flex; flex-direction: column; justify-content: space-between; }
-    .logo { text-align: center; margin-bottom: 20px; }
-    .logo-dc { color: #d5a22b; font-size: 58px; font-weight: 900; letter-spacing: -5px; }
-    .logo-name { font-size: 20px; font-weight: bold; margin-top: -5px; }
-    .logo-name span { color: #d5a22b; }
-    .logo-subtitle { font-size: 10px; letter-spacing: 3px; color: #cfcfcf; margin-top: 8px; }
-    .menu { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-    .menu button { background: #222; border: 1px solid #444; width: 100%; text-align: left; color: white; padding: 15px 18px; border-radius: 12px; font-size: 16px; display: flex; align-items: center; gap: 15px; cursor: pointer; }
-    .menu button:hover { background: #333; }
-    .menu button.active { background: #d5a22b; color: black; font-weight: bold; border-color: #d5a22b; }
-    .menu-icon { width: 28px; text-align: center; font-size: 21px; }
-    .main { margin-left: 285px; min-height: 100vh; padding: 35px 50px; }
-    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 45px; }
-    .header-title h1 { font-size: 38px; letter-spacing: 1px; text-align: center; flex: 1; }
-    .header-title p { color: #b58418; margin-top: 9px; font-size: 16px; letter-spacing: 3px; text-align: center; }
-    .profile { display: flex; align-items: center; gap: 12px; }
-    .profile-picture { width: 58px; height: 58px; border-radius: 50%; background: #e7d7ad; border: 2px solid #c49725; display: flex; align-items: center; justify-content: center; font-size: 25px; }
-    .profile-name { font-size: 15px; font-weight: bold; }
-    .profile-role { font-size: 12px; color: #a67b1b; margin-top: 4px; }
+    body { background: #f0f2f5; display: flex; height: 100vh; overflow: hidden; }
     
-    .lessons { max-width: 1100px; margin: auto; }
-    .lesson { background: white; border-radius: 17px; padding: 23px 27px; margin-bottom: 16px; display: flex; align-items: center; gap: 22px; border: 1px solid #eee; box-shadow: 0 5px 18px rgba(0,0,0,0.06); cursor: pointer; }
-    .lesson:hover { transform: translateX(5px); }
-    .lesson-icon { width: 62px; height: 62px; border-radius: 15px; background: #fbf5e5; display: flex; align-items: center; justify-content: center; font-size: 29px; flex-shrink: 0; }
-    .lesson-content { flex: 1; }
-    .lesson-content h3 { font-size: 18px; margin-bottom: 7px; }
-    .lesson-content p { font-size: 13px; color: #777; }
-    .lesson-arrow { color: #c39422; font-size: 22px; }
+    /* Sidebar */
+    .sidebar { width: 280px; background: #141619; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 30px 20px; }
+    .logo-container { text-align: center; margin-bottom: 40px; }
+    .logo-dc { color: #d5a22b; font-size: 50px; font-weight: 900; letter-spacing: -4px; }
+    .logo-name { font-size: 16px; font-weight: bold; }
+    .logo-name span { color: #d5a22b; }
+    
+    .nav-links { display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+    .nav-btn { background: #d5a22b; color: black; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; text-align: left; cursor: pointer; font-size: 15px; }
+    .logout-btn { background: #1f2329; color: white; border: 1px solid #444; padding: 12px 20px; border-radius: 8px; font-weight: bold; text-align: left; cursor: pointer; }
+    .logout-btn:hover { background: #2a2f38; }
 
-    .admin-panel-container { max-width: 1100px; margin: 30px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 18px rgba(0,0,0,0.06); }
-    .code-generator-box { background: #f9f9f9; padding: 20px; border-radius: 10px; border: 1px solid #e0e0e0; margin-bottom: 25px; }
-    .code-generator-box input { padding: 12px; margin-right: 10px; border: 1px solid #ccc; border-radius: 6px; width: 250px; font-size: 14px; margin-bottom: 10px; }
-    .code-generator-box button { padding: 12px 20px; background: #b58418; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    /* Main Content */
+    .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #ddd; padding-bottom: 20px; }
+    .header h1 { font-size: 26px; color: #141619; }
+    .admin-badge { background: #e6b135; padding: 6px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; color: black; }
+
+    /* Card Box */
+    .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; border: 1px solid #e1e4e8; }
+    .card h3 { margin-bottom: 15px; color: #333; font-size: 18px; }
+    .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
+    .input-group { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+    .input-group label { font-size: 13px; font-weight: bold; color: #555; }
+    .input-group input { padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+    
+    .btn-save { background: #d5a22b; color: black; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 14px; }
+    .btn-save:hover { background: #c29122; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
     th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
-    th { background: #b58418; color: white; }
+    th { background: #f8f9fa; color: #333; font-weight: bold; }
 </style>
 </head>
 <body>
 
+    <!-- Sidebar -->
     <div class="sidebar">
         <div>
-            <div class="logo">
+            <div class="logo-container">
                 <div class="logo-dc">DC</div>
                 <div class="logo-name">SOCIAL <span>ACADEMY</span></div>
-                <div class="logo-subtitle">LEARN • GROW • SUCCEED</div>
             </div>
-            <div class="menu">
-                <button class="active"><span class="menu-icon">⚙️</span> Admin Panel</button>
+            <div class="nav-links">
+                <button class="nav-btn">Admin Panel</button>
             </div>
         </div>
-        <div class="menu">
-            <button onclick="logoutAdmin()"><span class="menu-icon">➔</span> Logout</button>
-        </div>
+        <button class="logout-btn" onclick="logoutAdmin()">Logout</button>
     </div>
 
-    <div class="main">
+    <!-- Main Content Area -->
+    <div class="main-content">
         <div class="header">
-            <div class="header-title">
-                <h1>DC SOCIAL ACADEMY</h1>
-                <p>ADMIN CONTROL CENTER</p>
-            </div>
-            <div class="profile">
-                <div class="profile-picture">🛡️</div>
-                <div>
-                    <div class="profile-name">Administrator</div>
-                    <div class="profile-role">System Admin</div>
-                </div>
-            </div>
+            <h1>Admin Control Center</h1>
+            <div class="admin-badge">Administrator</div>
         </div>
 
-        <!-- ADMIN CONTROLS -->
-        <div class="admin-panel-container">
-            <h2>Manage Students & Access Codes</h2>
-            <p style="color: #777; margin: 10px 0 20px;">Dito ka gagawa ng Code at PIN para sa mga estudyante at makikita ang listahan nila.</p>
-            
-            <div class="code-generator-box">
-                <h3 style="margin-bottom: 12px;">Mag-generate ng Bagong Code & PIN</h3>
-                <input type="text" id="gen-code" placeholder="10-Char Code"><br>
-                <input type="text" id="gen-pin" placeholder="10-Char PIN"><br>
-                <button onclick="generateNewAccessCode()">I-save ang Code at PIN</button>
+        <!-- Code Generator Section -->
+        <div class="card">
+            <h3>Mag-generate ng Bagong Code & PIN</h3>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Access Code</label>
+                    <input type="text" id="gen-code" placeholder="Halimbawa: DCSOCIAL123">
+                </div>
+                <div class="input-group">
+                    <label>PIN</label>
+                    <input type="text" id="gen-pin" placeholder="Halimbawa: 12345">
+                </div>
             </div>
-            
+            <button class="btn-save" onclick="generateNewAccessCode()">I-save ang Code at PIN</button>
+        </div>
+
+        <!-- Students List Section -->
+        <div class="card">
             <h3>Listahan ng mga Naka-register na Estudyante</h3>
             <table>
                 <thead>
-                    <tr><th>Pangalan</th><th>Username</th><th>Email</th><th>CP Number</th><th>Code na Ginamit</th></tr>
+                    <tr>
+                        <th>Pangalan</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>CP Number</th>
+                        <th>Code na Ginamit</th>
+                    </tr>
                 </thead>
-                <tbody id="admin-student-list"></tbody>
+                <tbody id="admin-student-list">
+                    <!-- Dynamic Data dito -->
+                </tbody>
             </table>
-        </div>
-
-        <!-- MGA KURSO PARA SA ADMIN -->
-        <div style="max-width: 1100px; margin: 40px auto 25px;">
-            <h2>Academy Courses</h2>
-            <p style="margin-top: 7px; color: #777;">Maaari mo ring i-view ang mga kurso rito.</p>
-        </div>
-        <div class="lessons">
-            <div class="lesson" onclick="window.location.href='ads.html'">
-                <div class="lesson-icon">📢</div>
-                <div class="lesson-content"><h3>HOW TO CREATE ADS</h3><p>Learn how to create effective advertisements.</p></div>
-                <div class="lesson-arrow">❯</div>
-            </div>
-            <div class="lesson" onclick="window.location.href='portfolio.html'">
-                <div class="lesson-icon">💼</div>
-                <div class="lesson-content"><h3>HOW TO CREATE PORTFOLIO</h3><p>Learn how to create your professional portfolio.</p></div>
-                <div class="lesson-arrow">❯</div>
-            </div>
-            <div class="lesson" onclick="window.location.href='ai-photo.html'">
-                <div class="lesson-icon">🖼️</div>
-                <div class="lesson-content"><h3>HOW TO CREATE AI PHOTO</h3><p>Learn how to create high-quality AI photos.</p></div>
-                <div class="lesson-arrow">❯</div>
-            </div>
-            <div class="lesson" onclick="window.location.href='ai-video.html'">
-                <div class="lesson-icon">🎬</div>
-                <div class="lesson-content"><h3>HOW TO TURN YOUR VIDEO INTO AI VIDEO</h3><p>Learn how to transform your videos using AI.</p></div>
-                <div class="lesson-arrow">❯</div>
-            </div>
-            <div class="lesson" onclick="window.location.href='content-creation.html'">
-                <div class="lesson-icon">📝</div>
-                <div class="lesson-content"><h3>ALL ABOUT CONTENT CREATION</h3><p>Learn how to create engaging content.</p></div>
-                <div class="lesson-arrow">❯</div>
-            </div>
         </div>
     </div>
 
@@ -144,30 +113,47 @@
     }
 
     function generateNewAccessCode() {
-        const code = document.getElementById('gen-code').value.trim();
-        const pin = document.getElementById('gen-pin').value.trim();
-        if(!code || !pin) { alert("Pakisagutan ang parehong Code at PIN!"); return; }
+        const codeInput = document.getElementById('gen-code');
+        const pinInput = document.getElementById('gen-pin');
+        
+        const code = codeInput.value.trim();
+        const pin = pinInput.value.trim();
+
+        if(!code || !pin) { 
+            alert("Pakisagutan ang parehong Code at PIN!"); 
+            return; 
+        }
 
         let codes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
-        if(codes.some(item => item.code === code)) { alert("Umiiral na ang code na ito!"); return; }
+        
+        // Check kung existing na
+        if(codes.some(item => item.code === code)) { 
+            alert("Umiiral na ang code na ito!"); 
+            return; 
+        }
 
-        codes.push({ code, pin });
+        codes.push({ code: code, pin: pin });
         localStorage.setItem('generated_codes', JSON.stringify(codes));
+        
         alert("Tagumpay! Na-save na ang Code at PIN.");
-        document.getElementById('gen-code').value = '';
-        document.getElementById('gen-pin').value = '';
+        codeInput.value = '';
+        pinInput.value = '';
     }
 
     function loadAdminStudents() {
-        const users = JSON.parse(localStorage.getItem('academy_users') || '[]');
+        const data = JSON.parse(localStorage.getItem('academy_users') || '{"users":[]}');
         const tbody = document.getElementById('admin-student-list');
         tbody.innerHTML = '';
-        if(users.length === 0) {
-            tbody.innerHTML = <tr><td colspan="5" style="text-align: center; color: #777;">Wala pang estudyanteng nag-register.</td></tr>;
+        
+        let usersList = Array.isArray(data) ? data : (data.users || []);
+
+        if(usersList.length === 0) {
+            tbody.innerHTML = <tr><td colspan="5" style="text-align: center; color: #777; padding: 15px;">Wala pang estudyanteng nag-register.</td></tr>;
             return;
         }
-        users.users.forEach(u => { // safe guard o array iteration
-            tbody.innerHTML += <tr><td><b>${u.name}</b></td><td>${u.username}</td><td>${u.email}</td><td>${u.cp}</td><td><b>${u.codeUsed}</b></td></tr>;
+
+        usersList.forEach(u => {
+            tbody.innerHTML += <tr><td><b>${u.name || ''}</b></td><td>${u.username || ''}</td><td>${u.email || ''}</td><td>${u.cp || ''}</td><td><b>${u.codeUsed || ''}</b></td></tr>;
         });
     }
 
@@ -176,5 +162,6 @@
         window.location.href = 'index.html';
     }
 </script>
+
 </body>
 </html>
