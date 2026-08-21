@@ -24,8 +24,6 @@
             display: flex;
             border: 1px solid #eaeaea;
         }
-        
-        /* LEFT BANNER (ELEGANT WHITE STYLE) */
         .left-banner {
             width: 50%;
             background: #ffffff;
@@ -49,16 +47,10 @@
             border-radius: 12px;
             margin-bottom: 12px;
         }
-        .feature-icon {
-            font-size: 24px;
-            background: #f7f3e8;
-            padding: 10px;
-            border-radius: 10px;
-        }
+        .feature-icon { font-size: 24px; background: #f7f3e8; padding: 10px; border-radius: 10px; }
         .feature-text h4 { font-size: 15px; color: #171717; margin-bottom: 3px; }
         .feature-text p { font-size: 12px; color: #777; margin: 0; }
 
-        /* RIGHT FORM */
         .right-form {
             width: 50%;
             padding: 40px 50px;
@@ -101,11 +93,7 @@
             font-size: 14px;
             background: #fafafa;
         }
-        input:focus, select:focus {
-            border-color: #b58418;
-            outline: none;
-            background: #fff;
-        }
+        input:focus, select:focus { border-color: #b58418; outline: none; background: #fff; }
         .submit-btn {
             width: 100%;
             padding: 14px;
@@ -125,7 +113,6 @@
 <body>
 
 <div class="container">
-    <!-- LEFT BANNER (ELEGANT STYLE) -->
     <div class="left-banner">
         <h2>DC SOCIAL ACADEMY</h2>
         <h1>Welcome to <br>DC SOCIAL ACADEMY</h1>
@@ -148,7 +135,6 @@
         </div>
     </div>
 
-    <!-- RIGHT FORM CONTAINER -->
     <div class="right-form">
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('login')">Login</button>
@@ -174,7 +160,7 @@
         <!-- REGISTER FORM -->
         <div id="register-section" class="form-section">
             <h3>Create Account</h3>
-            <p class="subtitle">Maglagay ng impormasyon at ibinigay na Code & PIN mula sa Admin.</p>
+            <p class="subtitle">Maglagay ng 10-character Code at 10-character PIN mula sa Admin.</p>
             <div id="reg-error" class="error-msg"></div>
             
             <form onsubmit="handleRegister(event)">
@@ -206,11 +192,11 @@
 
                 <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
 
-                <label style="color: #b58418;">Exclusive Access Code</label>
-                <input type="text" id="reg-code" placeholder="Halimbawa: DC2026" required>
+                <label style="color: #b58418;">10-Character Access Code</label>
+                <input type="text" id="reg-code" placeholder="Halimbawa: DCHWUWB454" maxlength="20" required>
 
-                <label style="color: #b58418;">Access PIN</label>
-                <input type="password" id="reg-pin" placeholder="4-digit PIN" required>
+                <label style="color: #b58418;">10-Character Access PIN</label>
+                <input type="text" id="reg-pin" placeholder="Halimbawa: HWOWHDBLWB" maxlength="20" required>
 
                 <button type="submit" class="submit-btn">REGISTER & ACCESS</button>
             </form>
@@ -219,11 +205,11 @@
 </div>
 
 <script>
-    // MGA VALID CODES AT PINS NA IKaw LANG ANG NAKAKAALAM
+    // 10-CHARACTER CODES AT PINS
     const validAccessCodes = [
-        { code: "DC2026", pin: "1234" },
-        { code: "VIPSTUDENT", pin: "5678" },
-        { code: "SOCIALPRO", pin: "9988" }
+        { code: "DCHWUWB454", pin: "HWOWHDBLWB" },
+        { code: "VIPXYZ1234", pin: "ABCDFGHJKL" },
+        { code: "SOCIAL9988", pin: "POIUYTREWQ" }
     ];
 
     function switchTab(tab) {
@@ -252,31 +238,29 @@
         const inputPin = document.getElementById('reg-pin').value.trim();
         const errorDiv = document.getElementById('reg-error');
 
-        // Check kung nagamit na ang code
         let usedCodes = JSON.parse(localStorage.getItem('used_codes') || '[]');
         if(usedCodes.includes(inputCode)) {
             errorDiv.style.display = 'block';
-            errorDiv.innerText = "Ang Code at PIN na ito ay nagamit na ng ibang tao!";
+            errorDiv.innerText = "Ang 10-character Code na ito ay nagamit na ng ibang tao!";
             return;
         }
 
-        // Check kung tama ang Code at PIN
         const isValid = validAccessCodes.find(item => item.code === inputCode && item.pin === inputPin);
         if(!isValid) {
             errorDiv.style.display = 'block';
-            errorDiv.innerText = "Mali ang Access Code o PIN. Suriin mabuti o humingi sa admin.";
+            errorDiv.innerText = "Mali ang 10-character Access Code o PIN. Suriin mabuti.";
             return;
         }
 
         let users = JSON.parse(localStorage.getItem('academy_users') || '[]');
-        
         if(users.some(u => u.username === username)) {
             errorDiv.style.display = 'block';
-            errorDiv.innerText = "Ang username na ito ay nagamit na. Pumili ng iba.";
+            errorDiv.innerText = "Ang username na ito ay nagamit na.";
             return;
         }
 
-        users.push({ name, bday, gender, email, cp, username, password });
+        const regDate = new Date().toLocaleDateString();
+        users.push({ name, bday, gender, email, cp, username, password, codeUsed: inputCode, regDate });
         localStorage.setItem('academy_users', JSON.stringify(users));
 
         usedCodes.push(inputCode);
@@ -288,14 +272,324 @@
 
     function handleLogin(e) {
         e.preventDefault();
-        const user = document.getElementById('login-user').value;
-        const pass = document.getElementById('login-pass').value;
+        const user = document.getElementById('login-user').value.trim();
+        const pass = document.getElementById('login-pass').value.trim();
         const errorDiv = document.getElementById('login-error');
 
+        // SPECIAL ADMIN LOGIN (Dito mo isinulat ang admin username at password mo)
+        if(user === "admin134h" && pass === "adminpassword123") {
+            localStorage.setItem('current_admin', JSON.stringify({ username: "Admin" }));
+            localStorage.setItem('current_user', JSON.stringify({ name: "Administrator" }));
+            window.location.href = "dashboard.html";
+            return;
+        }
+
+        // Student Login
         let users = JSON.parse(localStorage.getItem('academy_users') || '[]');
         const foundUser = users.find(u => u.username === user && u.password === pass);
 
         if(foundUser) {
+            localStorage.setItem('current_admin', null); // Siguraduhing hindi naka-admin flag kung student
+            localStorage.setItem('current_user', JSON.stringify(foundUser));
+            window.location.href = "dashboard.html";
+        } else {
+            errorDiv.style.display = 'block';
+            errorDiv.innerText = "Mali ang username o password.";
+        }
+    }
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DC Social Academy - Login & Register</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body {
+            background: #f8f8f8;
+            color: #171717;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+            overflow: hidden;
+            display: flex;
+            border: 1px solid #eaeaea;
+        }
+        .left-banner {
+            width: 50%;
+            background: #ffffff;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-right: 1px solid #eee;
+        }
+        .left-banner h2 { font-size: 26px; color: #b58418; margin-bottom: 5px; letter-spacing: 1px; }
+        .left-banner h1 { font-size: 32px; color: #171717; margin-bottom: 15px; font-weight: bold; }
+        .left-banner p { color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 30px; }
+
+        .feature-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #fcfbfa;
+            border: 1px solid #f0ece1;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+        .feature-icon { font-size: 24px; background: #f7f3e8; padding: 10px; border-radius: 10px; }
+        .feature-text h4 { font-size: 15px; color: #171717; margin-bottom: 3px; }
+        .feature-text p { font-size: 12px; color: #777; margin: 0; }
+
+        .right-form {
+            width: 50%;
+            padding: 40px 50px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: #fff;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #888;
+        }
+        .tab-btn.active {
+            color: #b58418;
+            border-bottom: 3px solid #b58418;
+        }
+        .form-section { display: none; }
+        .form-section.active { display: block; }
+        
+        .form-section h3 { font-size: 22px; margin-bottom: 8px; color: #171717; }
+        .form-section .subtitle { font-size: 13px; color: #777; margin-bottom: 20px; }
+
+        label { display: block; margin-bottom: 6px; font-weight: bold; font-size: 13px; color: #333; }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fafafa;
+        }
+        input:focus, select:focus { border-color: #b58418; outline: none; background: #fff; }
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #b58418;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .submit-btn:hover { background: #9a6d13; }
+        .error-msg { color: #d9534f; font-size: 13px; margin-bottom: 15px; display: none; background: #fdf2f2; padding: 10px; border-radius: 6px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="left-banner">
+        <h2>DC SOCIAL ACADEMY</h2>
+        <h1>Welcome to <br>DC SOCIAL ACADEMY</h1>
+        <p>Your all-in-one platform to learn, grow, and master digital marketing and online success.</p>
+
+        <div class="feature-box">
+            <div class="feature-icon">🎓</div>
+            <div class="feature-text">
+                <h4>Step-by-step Tutorials</h4>
+                <p>Easy to follow training modules.</p>
+            </div>
+        </div>
+
+        <div class="feature-box">
+            <div class="feature-icon">🚀</div>
+            <div class="feature-text">
+                <h4>Practical Strategies</h4>
+                <p>Real-world application for fast results.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-form">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+            <button class="tab-btn" onclick="switchTab('register')">Create Account</button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div id="login-section" class="form-section active">
+            <h3>Login to your account</h3>
+            <p class="subtitle">Enter your credentials to access your learning dashboard.</p>
+            <div id="login-error" class="error-msg"></div>
+            <form onsubmit="handleLogin(event)">
+                <label>Username</label>
+                <input type="text" id="login-user" placeholder="Enter your username" required>
+                
+                <label>Password</label>
+                <input type="password" id="login-pass" placeholder="Enter your password" required>
+                
+                <button type="submit" class="submit-btn">LOGIN</button>
+            </form>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div id="register-section" class="form-section">
+            <h3>Create Account</h3>
+            <p class="subtitle">Ilagay ang code at PIN na ibinigay ng iyong Admin.</p>
+            <div id="reg-error" class="error-msg"></div>
+            
+            <form onsubmit="handleRegister(event)">
+                <label>Full Name</label>
+                <input type="text" id="reg-name" required>
+
+                <label>Birthday</label>
+                <input type="date" id="reg-bday" required>
+
+                <label>Gender</label>
+                <select id="reg-gender" required>
+                    <option value="">Piliin ang Kasarian</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <label>Email Address</label>
+                <input type="email" id="reg-email" required>
+
+                <label>CP Number</label>
+                <input type="text" id="reg-cp" required>
+
+                <label>Username</label>
+                <input type="text" id="reg-username" required>
+
+                <label>Password</label>
+                <input type="password" id="reg-password" required>
+
+                <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+
+                <label style="color: #b58418;">10-Character Access Code</label>
+                <input type="text" id="reg-code" placeholder="Halimbawa: DCHWUWB454" maxlength="15" required>
+
+                <label style="color: #b58418;">10-Character Access PIN</label>
+                <input type="text" id="reg-pin" placeholder="Halimbawa: HWOWHDBLWB" maxlength="15" required>
+
+                <button type="submit" class="submit-btn">REGISTER & ACCESS</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.form-section').forEach(sec => sec.classList.remove('active'));
+        
+        if(tab === 'login') {
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            document.getElementById('login-section').classList.add('active');
+        } else {
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            document.getElementById('register-section').classList.add('active');
+        }
+    }
+
+    function handleRegister(e) {
+        e.preventDefault();
+        const name = document.getElementById('reg-name').value;
+        const bday = document.getElementById('reg-bday').value;
+        const gender = document.getElementById('reg-gender').value;
+        const email = document.getElementById('reg-email').value;
+        const cp = document.getElementById('reg-cp').value;
+        const username = document.getElementById('reg-username').value;
+        const password = document.getElementById('reg-password').value;
+        const inputCode = document.getElementById('reg-code').value.trim();
+        const inputPin = document.getElementById('reg-pin').value.trim();
+        const errorDiv = document.getElementById('reg-error');
+
+        // 1. Check kung nagamit na ang code na ito ng iba
+        let usedCodes = JSON.parse(localStorage.getItem('used_codes') || '[]');
+        if(usedCodes.includes(inputCode)) {
+            errorDiv.style.display = 'block';
+            errorDiv.innerText = "Ang 10-character Code na ito ay nagamit na ng ibang tao!";
+            return;
+        }
+
+        // 2. Check kung ang code ay ginawa ng Admin mula sa dashboard
+        let generatedCodes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
+        const validCodeMatch = generatedCodes.find(item => item.code === inputCode && item.pin === inputPin);
+
+        if(!validCodeMatch) {
+            errorDiv.style.display = 'block';
+            errorDiv.innerText = "Mali ang Access Code o PIN. Siguraduhing tama ang binigay ng Admin.";
+            return;
+        }
+
+        let users = JSON.parse(localStorage.getItem('academy_users') || '[]');
+        if(users.some(u => u.username === username)) {
+            errorDiv.style.display = 'block';
+            errorDiv.innerText = "Ang username na ito ay nagamit na.";
+            return;
+        }
+
+        const regDate = new Date().toLocaleDateString();
+        users.push({ name, bday, gender, email, cp, username, password, codeUsed: inputCode, regDate });
+        localStorage.setItem('academy_users', JSON.stringify(users));
+
+        usedCodes.push(inputCode);
+        localStorage.setItem('used_codes', JSON.stringify(usedCodes));
+
+        alert("Tagumpay ang paggawa ng account! Maaari ka na ngayon mag-log in.");
+        switchTab('login');
+    }
+
+    function handleLogin(e) {
+        e.preventDefault();
+        const user = document.getElementById('login-user').value.trim();
+        const pass = document.getElementById('login-pass').value.trim();
+        const errorDiv = document.getElementById('login-error');
+
+        // ADMIN LOGIN CHECK
+        if(user === "admin134h" && pass === "adminpassword123") {
+            localStorage.setItem('current_admin', JSON.stringify({ username: "Admin" }));
+            localStorage.setItem('current_user', JSON.stringify({ name: "Administrator" }));
+            window.location.href = "dashboard.html";
+            return;
+        }
+
+        // STUDENT LOGIN CHECK
+        let users = JSON.parse(localStorage.getItem('academy_users') || '[]');
+        const foundUser = users.find(u => u.username === user && u.password === pass);
+
+        if(foundUser) {
+            localStorage.removeItem('current_admin'); // Siguraduhing hindi admin
             localStorage.setItem('current_user', JSON.stringify(foundUser));
             window.location.href = "dashboard.html";
         } else {
