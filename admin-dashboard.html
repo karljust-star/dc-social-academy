@@ -22,8 +22,7 @@
     .header h1 { font-size: 22px; color: #171717; }
     .admin-badge { background: #fbf5e5; color: #d5a22b; padding: 6px 15px; border-radius: 20px; font-weight: bold; font-size: 13px; border: 1px solid #e7d7ad; }
 
-    .content-body { padding: 30px 40px; display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
-    .left-panel, .right-panel { display: flex; flex-direction: column; gap: 20px; }
+    .content-body { padding: 30px 40px; display: flex; flex-direction: column; gap: 20px; max-width: 1200px; }
 
     .card { background: white; padding: 25px; border-radius: 12px; border: 1px solid #e1e4e8; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
     .card h3 { font-size: 16px; color: #171717; margin-bottom: 15px; border-bottom: 2px solid #f7f5ef; padding-bottom: 8px; }
@@ -54,8 +53,8 @@
     .btn-unblock:hover { background: #1e7e34; }
     .blocked-row { background-color: #ffeeee !important; }
 
-    /* Generated Codes Sidebar Widget */
-    .code-list-container { max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+    /* Generated Codes Grid Container */
+    .code-list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; max-height: 200px; overflow-y: auto; }
     .code-item { background: #faf9f6; padding: 10px; border-radius: 6px; border: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
 </style>
 </head>
@@ -79,58 +78,53 @@
         </div>
 
         <div class="content-body">
-            <!-- Left Side: Generator & Student List -->
-            <div class="left-panel">
-                <!-- Generate Box -->
-                <div class="card">
-                    <h3>Mag-generate ng Bagong Code & PIN</h3>
-                    <div class="form-row">
-                        <div class="input-group">
-                            <label>Access Code</label>
-                            <input type="text" id="gen-code" placeholder="Halimbawa: DCSOCIAL123">
-                        </div>
-                        <div class="input-group">
-                            <label>PIN</label>
-                            <input type="text" id="gen-pin" placeholder="Halimbawa: 12345">
-                        </div>
+            <!-- 1. Generate Box -->
+            <div class="card">
+                <h3>Mag-generate ng Bagong Code & PIN</h3>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Access Code</label>
+                        <input type="text" id="gen-code" placeholder="Halimbawa: DCSOCIAL123">
                     </div>
-                    <button class="btn-save" onclick="saveCode()">I-save ang Code at PIN</button>
+                    <div class="input-group">
+                        <label>PIN</label>
+                        <input type="text" id="gen-pin" placeholder="Halimbawa: 12345">
+                    </div>
                 </div>
+                <button class="btn-save" onclick="saveCode()">I-save ang Code at PIN</button>
+            </div>
 
-                <!-- Student List Box -->
-                <div class="card">
-                    <h3>Listahan ng mga Naka-register na Estudyante</h3>
-                    <div class="search-box">
-                        <input type="text" id="searchInput" placeholder="Hanapin ang pangalan o username..." onkeyup="filterStudents()">
-                    </div>
-                    <div style="overflow-x: auto;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Pangalan</th>
-                                    <th>Username</th>
-                                    <th>Password</th>
-                                    <th>Email</th>
-                                    <th>CP Number</th>
-                                    <th>Code na Ginamit</th>
-                                    <th>Aksyon</th>
-                                </tr>
-                            </thead>
-                            <tbody id="studentTableBody">
-                                <!-- Dynamic via JS -->
-                            </tbody>
-                        </table>
-                    </div>
+            <!-- 2. Generated Codes List Box -->
+            <div class="card">
+                <h3>Lahat ng Na-generate na Code at PIN</h3>
+                <div class="code-list-container" id="generatedCodesList">
+                    <!-- Dynamic via JS -->
                 </div>
             </div>
 
-            <!-- Right Side: All Generated Codes List -->
-            <div class="right-panel">
-                <div class="card">
-                    <h3>Lahat ng Na-generate na Code</h3>
-                    <div class="code-list-container" id="generatedCodesList">
-                        <!-- Dynamic via JS -->
-                    </div>
+            <!-- 3. Student List Box -->
+            <div class="card">
+                <h3>Listahan ng mga Naka-register na Estudyante</h3>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Hanapin ang pangalan o username..." onkeyup="filterStudents()">
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pangalan</th>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Email</th>
+                                <th>CP Number</th>
+                                <th>Code na Ginamit</th>
+                                <th>Aksyon</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody">
+                            <!-- Dynamic via JS -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -186,7 +180,6 @@
             codeListContainer.innerHTML = '<p style="font-size:12px; color:#777;">Wala pang na-generate na code.</p>';
         } else {
             codes.forEach(item => {
-                // Check kung nagamit na ang code na ito ng kahit anong user
                 let isUsed = usersList.some(u => u.codeUsed === item.code);
                 let badgeClass = isUsed ? 'status-used' : 'status-unused';
                 let badgeText = isUsed ? 'Used' : 'Available';
@@ -194,7 +187,7 @@
                 let div = document.createElement('div');
                 div.className = 'code-item';
                 div.innerHTML = `
-                    <div><strong>${item.code}</strong> (PIN: ${item.pin})</div>
+                    <div><strong>${item.code}</strong> <span style="color:#666;">(PIN: ${item.pin})</span></div>
                     <span class="status-badge ${badgeClass}">${badgeText}</span>
                 `;
                 codeListContainer.appendChild(div);
