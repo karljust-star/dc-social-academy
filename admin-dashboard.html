@@ -9,15 +9,15 @@
     body { display: flex; height: 100vh; background: #f7f5ef; overflow: hidden; }
 
     /* Sidebar */
-    .sidebar { width: 280px; background: #171717; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 25px 15px; }
+    .sidebar { width: 280px; background: #171717; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 25px 15px; z-index: 10; }
     .sidebar-top .logo { color: #d5a22b; font-size: 32px; font-weight: 900; letter-spacing: -2px; margin-bottom: 2px; }
     .sidebar-top .logo-sub { font-size: 12px; color: #aaa; margin-bottom: 20px; }
     .nav-btn { background: #d5a22b; color: black; padding: 10px 12px; border-radius: 6px; font-weight: bold; text-align: center; margin-bottom: 15px; font-size: 14px; }
     
     /* Code Section sa Sidebar */
-    .sidebar-codes { margin-top: 10px; display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+    .sidebar-codes { margin-top: 10px; display: flex; flex-direction: column; flex: 1; min-height: 150px; }
     .sidebar-codes h4 { font-size: 13px; color: #d5a22b; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
-    .code-list-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-right: 4px; }
+    .code-list-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-right: 4px; max-height: calc(100vh - 300px); }
     .code-item { background: #262626; padding: 8px 10px; border-radius: 5px; border: 1px solid #333; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #ddd; }
     
     .logout-btn { background: transparent; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 10px; border-radius: 8px; font-weight: bold; text-align: center; cursor: pointer; margin-top: 15px; }
@@ -40,7 +40,7 @@
     .input-group label { font-size: 12px; font-weight: bold; color: #444; }
     .input-group input { padding: 10px 12px; background: #faf9f6; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; outline: none; }
     .input-group input:focus { border-color: #d5a22b; background: white; }
-    .btn-save { background: #d5a22b; color: black; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
+    .btn-save { background: #d5a22b; color: black; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; position: relative; z-index: 5; }
     .btn-save:hover { background: #c29122; }
 
     /* Search & Table */
@@ -172,10 +172,21 @@
     }
 
     function loadDashboardData() {
-        // Load Generated Codes
         let codes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
-        let data = JSON.parse(localStorage.getItem('academy_users') || '{"users":[]}');
-        let usersList = Array.isArray(data) ? data : (data.users || []);
+        
+        // Sinisiguro natin na pareho mong mababasa ang academy_users kahit anong format ang nai-save
+        let rawData = localStorage.getItem('academy_users');
+        let usersList = [];
+        try {
+            let parsed = JSON.parse(rawData);
+            if (Array.isArray(parsed)) {
+                usersList = parsed;
+            } else if (parsed && Array.isArray(parsed.users)) {
+                usersList = parsed.users;
+            }
+        } catch(e) {
+            usersList = [];
+        }
 
         let codeListContainer = document.getElementById('generatedCodesList');
         codeListContainer.innerHTML = '';
@@ -198,7 +209,6 @@
             });
         }
 
-        // Load Students Table
         renderStudentTable(usersList);
     }
 
@@ -236,19 +246,30 @@
     }
 
     function toggleBlock(index) {
-        let data = JSON.parse(localStorage.getItem('academy_users') || '{"users":[]}');
-        let usersList = Array.isArray(data) ? data : (data.users || []);
+        let rawData = localStorage.getItem('academy_users');
+        let usersList = [];
+        try {
+            let parsed = JSON.parse(rawData);
+            if (Array.isArray(parsed)) usersList = parsed;
+            else if (parsed && Array.isArray(parsed.users)) usersList = parsed.users;
+        } catch(e) { usersList = []; }
 
-        usersList[index].isBlocked = !usersList[index].isBlocked;
-        
-        localStorage.setItem('academy_users', JSON.stringify({ users: usersList }));
-        loadDashboardData();
+        if(usersList[index]) {
+            usersList[index].isBlocked = !usersList[index].isBlocked;
+            localStorage.setItem('academy_users', JSON.stringify({ users: usersList }));
+            loadDashboardData();
+        }
     }
 
     function filterStudents() {
         let query = document.getElementById('searchInput').value.toLowerCase();
-        let data = JSON.parse(localStorage.getItem('academy_users') || '{"users":[]}');
-        let usersList = Array.isArray(data) ? data : (data.users || []);
+        let rawData = localStorage.getItem('academy_users');
+        let usersList = [];
+        try {
+            let parsed = JSON.parse(rawData);
+            if (Array.isArray(parsed)) usersList = parsed;
+            else if (parsed && Array.isArray(parsed.users)) usersList = parsed.users;
+        } catch(e) { usersList = []; }
 
         let filtered = usersList.filter(u => 
             (u.name && u.name.toLowerCase().includes(query)) || 
@@ -259,7 +280,6 @@
         renderStudentTable(filtered);
     }
 
-    // Load data on page load
     window.onload = loadDashboardData;
 </script>
 
