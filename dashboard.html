@@ -3,141 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DC Social Academy Dashboard</title>
+<title>Student Dashboard - DC Social Academy</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-    body { background: #f7f5ef; color: #171717; }
-    .sidebar { position: fixed; left: 0; top: 0; width: 285px; height: 100vh; background: #08090b; color: white; padding: 20px 18px; z-index: 9999; display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; }
-    .logo { text-align: center; margin-bottom: 20px; }
-    .logo-dc { color: #d5a22b; font-size: 58px; font-weight: 900; letter-spacing: -5px; }
-    .logo-name { font-size: 20px; font-weight: bold; margin-top: -5px; }
-    .logo-name span { color: #d5a22b; }
-    .logo-subtitle { font-size: 10px; letter-spacing: 3px; color: #cfcfcf; margin-top: 8px; }
-    .menu { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-    .menu button { background: #222; border: 1px solid #444; width: 100%; text-align: left; color: white; padding: 15px 18px; border-radius: 12px; font-size: 16px; display: flex; align-items: center; gap: 15px; cursor: pointer; }
-    .menu button:hover { background: #333; }
-    .menu button.active { background: #d5a22b; color: black; font-weight: bold; border-color: #d5a22b; }
-    .menu-icon { width: 28px; text-align: center; font-size: 21px; }
-    .main { margin-left: 285px; min-height: 100vh; padding: 35px 50px; transition: 0.3s; }
-    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 45px; gap: 15px; }
-    .header-title h1 { font-size: 38px; letter-spacing: 1px; text-align: center; flex: 1; }
-    .header-title p { color: #b58418; margin-top: 9px; font-size: 16px; letter-spacing: 3px; text-align: center; }
-    .profile { display: flex; align-items: center; gap: 12px; }
-    .profile-picture { width: 58px; height: 58px; border-radius: 50%; background: #e7d7ad; border: 2px solid #c49725; display: flex; align-items: center; justify-content: center; font-size: 25px; flex-shrink: 0; }
-    .profile-name { font-size: 15px; font-weight: bold; }
-    .profile-role { font-size: 12px; color: #a67b1b; margin-top: 4px; }
-    .lessons { max-width: 1100px; margin: auto; }
-    .lesson { background: white; border-radius: 17px; padding: 23px 27px; margin-bottom: 16px; display: flex; align-items: center; gap: 22px; border: 1px solid #eee; box-shadow: 0 5px 18px rgba(0,0,0,0.06); cursor: pointer; }
-    .lesson:hover { transform: translateX(5px); }
-    .lesson-icon { width: 62px; height: 62px; border-radius: 15px; background: #fbf5e5; display: flex; align-items: center; justify-content: center; font-size: 29px; flex-shrink: 0; }
-    .lesson-content { flex: 1; }
-    .lesson-content h3 { font-size: 18px; margin-bottom: 7px; }
-    .lesson-content p { font-size: 13px; color: #777; }
-    .lesson-arrow { color: #c39422; font-size: 22px; }
-
-    /* MOBILE RESPONSIVE MEDIA QUERY (Para sa Cellphone) */
-    @media (max-width: 900px) {
-        .sidebar { position: relative; width: 100%; height: auto; flex-direction: row; align-items: center; padding: 15px 20px; }
-        .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 0; }
-        .logo-dc { font-size: 32px; letter-spacing: -2px; }
-        .logo-name { font-size: 14px; margin-top: 0; text-align: left; }
-        .logo-subtitle { display: none; }
-        .menu { margin-top: 0; flex-direction: row; gap: 5px; }
-        .menu button { padding: 10px 15px; font-size: 14px; width: auto; }
-        .main { margin-left: 0; padding: 25px 15px; }
-        .header { flex-direction: column; align-items: flex-start; margin-bottom: 30px; gap: 20px; }
-        .header-title { width: 100%; text-align: left; }
-        .header-title h1 { font-size: 26px; text-align: left; }
-        .header-title p { font-size: 13px; text-align: left; letter-spacing: 2px; }
-        .profile { width: 100%; justify-content: flex-start; background: white; padding: 12px; border-radius: 12px; border: 1px solid #eee; }
-        .lesson { padding: 15px; gap: 15px; }
-        .lesson-icon { width: 48px; height: 48px; font-size: 22px; border-radius: 10px; }
-        .lesson-content h3 { font-size: 15px; }
-        .lesson-content p { font-size: 12px; }
-    }
+    body { background: #f7f5ef; padding: 40px; }
+    .card { background: white; max-width: 600px; margin: 0 auto; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    h1 { color: #171717; margin-bottom: 10px; }
+    p { color: #555; margin-bottom: 20px; font-size: 15px; }
+    .logout-btn { background: #ff6b6b; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div>
-            <div class="logo">
-                <div class="logo-dc">DC</div>
-                <div>
-                    <div class="logo-name">SOCIAL <span>ACADEMY</span></div>
-                    <div class="logo-subtitle">LEARN • GROW • SUCCEED</div>
-                </div>
-            </div>
-            <div class="menu" style="display: none;"> <!-- Hidden sa CP para compact, pero makikita sa laptop -->
-            </div>
-        </div>
-        <div class="menu">
-            <button class="active" style="display:none;"><span class="menu-icon">🏠</span> Home</button>
-            <button onclick="logoutUser()"><span class="menu-icon">➔</span> Logout</button>
-        </div>
-    </div>
-
-    <div class="main">
-        <div class="header">
-            <div class="header-title">
-                <h1>DC SOCIAL ACADEMY</h1>
-                <p>LEARN, GROW & SUCCEED</p>
-            </div>
-            <div class="profile">
-                <div class="profile-picture">👤</div>
-                <div>
-                    <div class="profile-name" id="display-name">Academy User</div>
-                    <div class="profile-role">Academy Partner</div>
-                </div>
-            </div>
-        </div>
-
-        <div style="max-width: 1100px; margin: 0 auto 25px;">
-            <h2>Welcome back! 👋</h2>
-            <p style="margin-top: 7px; color: #777;">Continue your learning journey.</p>
-        </div>
-        
-        <div class="lessons">
-            <div class="lesson" onclick="window.location.href='ads.html'">
-                <div class="lesson-icon">📢</div>
-                <div class="lesson-content"><h3>HOW TO CREATE ADS</h3><p>Learn how to create effective advertisements.</p></div>
-                <div class="lesson-arrow">❯</div>
-            </div>
-            <div class="lesson" onclick="window.location.href='portfolio.html'">
-                <div class="lesson-icon">💼</div>
-                <div class="lesson-content"><h3>HOW TO CREATE PORTFOLIO</h3><p>Learn how to create your professional portfolio.</p></div>
-                <div class="lesson-arrow">❯</div>
-            </div>
-            <div class="lesson" onclick="window.location.href='ai-photo.html'">
-                <div class="lesson-icon">🖼️</div>
-                <div class="lesson-content"><h3>HOW TO CREATE AI PHOTO</h3><p>Learn how to create high-quality AI photos.</p></div>
-                <div class="lesson-arrow">❯</div>
-            </div>
-            <div class="lesson" onclick="window.location.href='ai-video.html'">
-                <div class="lesson-icon">🎬</div>
-                <div class="lesson-content"><h3>HOW TO TURN YOUR VIDEO INTO AI VIDEO</h3><p>Learn how to transform your videos using AI.</p></div>
-                <div class="lesson-arrow">❯</div>
-            </div>
-            <div class="lesson" onclick="window.location.href='content-creation.html'">
-                <div class="lesson-icon">📝</div>
-                <div class="lesson-content"><h3>ALL ABOUT CONTENT CREATION</h3><p>Learn how to create engaging content.</p></div>
-                <div class="lesson-arrow">❯</div>
-            </div>
-        </div>
-    </div>
+<div class="card">
+    <h1 id="welcomeText">Maligayang Pagdating!</h1>
+    <p>Matagumpay kang nakapasok sa DC Social Academy bilang isang estudyante.</p>
+    <button class="logout-btn" onclick="logout()">Mag-logout</button>
+</div>
 
 <script>
     window.onload = function() {
-        const currentUser = JSON.parse(localStorage.getItem('current_user'));
-        if(currentUser) {
-            document.getElementById('display-name').innerText = currentUser.name;
-        } else {
-            window.location.href = 'index.html';
+        let user = JSON.parse(localStorage.getItem('current_user'));
+        if(!user || user.role !== 'student') {
+            window.location.href = 'index';
+            return;
         }
+        document.getElementById('welcomeText').innerText = `Maligayang Pagdating, ${user.name}!`;
     }
-    function logoutUser() {
+
+    function logout() {
         localStorage.removeItem('current_user');
-        window.location.href = 'index.html';
+        window.location.href = 'index';
     }
 </script>
 </body>

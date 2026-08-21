@@ -7,231 +7,103 @@
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
     body { display: flex; height: 100vh; background: #f7f5ef; overflow: hidden; }
-
-    /* Sidebar */
-    .sidebar { width: 280px; background: #171717; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 25px 15px; flex-shrink: 0; transition: 0.3s; }
-    .sidebar-top .logo { color: #d5a22b; font-size: 32px; font-weight: 900; letter-spacing: -2px; margin-bottom: 2px; }
-    .sidebar-top .logo-sub { font-size: 12px; color: #aaa; margin-bottom: 20px; }
-    
-    .nav-btn { background: #d5a22b; color: black; padding: 12px 15px; border-radius: 8px; font-weight: bold; text-align: center; margin-bottom: 10px; font-size: 14px; cursor: pointer; display: block; text-decoration: none; }
-    .nav-btn:hover { background: #c29122; }
-    
-    .logout-btn { background: transparent; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 10px; border-radius: 8px; font-weight: bold; text-align: center; cursor: pointer; margin-top: 15px; }
-    .logout-btn:hover { background: #ff6b6b; color: white; }
-
-    /* Main Content Area */
-    .main-container { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
-    .header { background: white; padding: 20px 40px; border-bottom: 1px solid #e1e4e8; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
-    .header h1 { font-size: 22px; color: #171717; }
-    .admin-badge { background: #fbf5e5; color: #d5a22b; padding: 6px 15px; border-radius: 20px; font-weight: bold; font-size: 13px; border: 1px solid #e7d7ad; }
-
-    .content-body { padding: 30px 40px; display: flex; flex-direction: column; gap: 20px; max-width: 1200px; width: 100%; }
-
-    .card { background: white; padding: 25px; border-radius: 12px; border: 1px solid #e1e4e8; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
-    .card h3 { font-size: 16px; color: #171717; margin-bottom: 15px; border-bottom: 2px solid #f7f5ef; padding-bottom: 8px; }
-
-    /* Form Group */
-    .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
-    .input-group { flex: 1; display: flex; flex-direction: column; gap: 5px; }
-    .input-group label { font-size: 12px; font-weight: bold; color: #444; }
-    .input-group input { padding: 10px 12px; background: #faf9f6; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; outline: none; width: 100%; }
-    .input-group input:focus { border-color: #d5a22b; background: white; }
-    .btn-save { background: #d5a22b; color: black; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
-    .btn-save:hover { background: #c29122; }
-
-    /* Search & Table */
-    .search-box { margin-bottom: 15px; display: flex; gap: 10px; }
-    .search-box input { flex: 1; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; outline: none; }
-    .btn-search { background: #171717; color: #d5a22b; border: 1px solid #d5a22b; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
-    
-    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; white-space: nowrap; }
-    th { background: #faf9f6; color: #444; padding: 10px; border-bottom: 1px solid #ddd; }
-    td { padding: 10px; border-bottom: 1px solid #eee; color: #333; }
-
-    /* MOBILE RESPONSIVE MEDIA QUERY */
-    @media (max-width: 900px) {
-        body { flex-direction: column; height: auto; overflow: auto; }
-        .sidebar { width: 100%; height: auto; flex-direction: row; align-items: center; padding: 15px 20px; flex-wrap: wrap; gap: 10px; }
-        .sidebar-top { display: flex; align-items: center; gap: 15px; width: 100%; justify-content: space-between; }
-        .sidebar-top .logo { font-size: 24px; margin-bottom: 0; }
-        .sidebar-top .logo-sub { display: none; }
-        .sidebar-top .nav-btn { display: inline-block; margin-bottom: 0; padding: 8px 12px; font-size: 12px; }
-        .logout-btn { margin-top: 0; padding: 8px 12px; font-size: 12px; width: 100%; text-align: center; }
-        .main-container { height: auto; overflow: visible; }
-        .header { padding: 15px 20px; flex-direction: column; align-items: flex-start; gap: 10px; }
-        .content-body { padding: 20px; }
-        .form-row { flex-direction: column; gap: 15px; }
-    }
+    .sidebar { width: 280px; background: #171717; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 25px 15px; }
+    .logo { color: #d5a22b; font-size: 32px; font-weight: 900; letter-spacing: -2px; margin-bottom: 2px; }
+    .logo-sub { font-size: 12px; color: #aaa; margin-bottom: 20px; }
+    .nav-btn { background: #222; color: #d5a22b; border: 1px solid #d5a22b; padding: 12px 15px; border-radius: 8px; font-weight: bold; text-align: center; margin-bottom: 10px; font-size: 14px; display: block; text-decoration: none; }
+    .nav-btn.active { background: #d5a22b; color: black; }
+    .logout-btn { background: transparent; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 10px; border-radius: 8px; font-weight: bold; text-align: center; cursor: pointer; }
+    .main-container { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+    .header { background: white; padding: 20px 40px; border-bottom: 1px solid #e1e4e8; display: flex; justify-content: space-between; align-items: center; }
+    .content-body { padding: 30px 40px; display: flex; flex-direction: column; gap: 20px; max-width: 1200px; }
+    .card { background: white; padding: 25px; border-radius: 12px; border: 1px solid #e1e4e8; }
+    .form-group { display: flex; gap: 15px; margin-bottom: 15px; }
+    .form-field { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+    .form-field input { padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+    .action-btn { background: #d5a22b; color: black; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+    th { background: #faf9f6; padding: 12px; border-bottom: 1px solid #ddd; }
+    td { padding: 12px; border-bottom: 1px solid #eee; }
 </style>
 </head>
 <body>
 
-    <!-- Sidebar -->
     <div class="sidebar">
-        <div class="sidebar-top" style="display: flex; align-items: center; width: 100%;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div class="logo">DC</div>
-                <div class="logo-sub" style="margin-bottom:0;">SOCIAL ACADEMY</div>
-            </div>
-            <div style="display: flex; gap: 5px;">
-                <a href="admin-dashboard.html" class="nav-btn" style="margin-bottom:0;">Panel</a>
-                <a href="code.html" class="nav-btn" style="background: #222; color: #d5a22b; border: 1px solid #d5a22b; margin-bottom:0;">CODE</a>
-            </div>
+        <div>
+            <div class="logo">DC</div>
+            <div class="logo-sub">SOCIAL ACADEMY</div>
+            <a href="admin-dashboard" class="nav-btn active">Panel</a>
+            <a href="code" class="nav-btn">CODE</a>
         </div>
-        <div class="logout-btn" onclick="logoutAdmin()">Logout</div>
+        <div class="logout-btn" onclick="logout()">Logout</div>
     </div>
 
-    <!-- Main Container -->
     <div class="main-container">
-        <div class="header">
-            <h1>Admin Control Center</h1>
-            <div class="admin-badge">Administrator</div>
-        </div>
-
+        <div class="header"><h1>Admin Control Center</h1></div>
         <div class="content-body">
-            <!-- 1. Generate Box -->
             <div class="card">
                 <h3>Mag-generate ng Bagong Code & PIN</h3>
-                <div class="form-row">
-                    <div class="input-group">
-                        <label>Access Code</label>
-                        <input type="text" id="gen-code" placeholder="Halimbawa: DCSOCIAL123">
-                    </div>
-                    <div class="input-group">
-                        <label>PIN</label>
-                        <input type="text" id="gen-pin" placeholder="Halimbawa: 12345">
-                    </div>
+                <div class="form-group">
+                    <div class="form-field"><input type="text" id="newCode" placeholder="Access Code"></div>
+                    <div class="form-field"><input type="text" id="newPin" placeholder="PIN"></div>
                 </div>
-                <button class="btn-save" id="saveCodeBtn">I-save ang Code at PIN</button>
+                <button class="action-btn" onclick="saveCode()">I-save ang Code at PIN</button>
             </div>
-
-            <!-- 2. Student List Box -->
             <div class="card">
                 <h3>Listahan ng mga Naka-register na Estudyante</h3>
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Hanapin ang pangalan o username...">
-                    <button class="btn-search" id="searchBtn">Hanapin</button>
-                </div>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Pangalan</th>
-                                <th>Username</th>
-                                <th>Password / PIN</th>
-                                <th>Email</th>
-                                <th>CP Number</th>
-                                <th>Code na Ginamit</th>
-                                <th>Aksyon</th>
-                            </tr>
-                        </thead>
-                        <tbody id="studentTableBody">
-                            <!-- Dynamic via Firebase JS -->
-                        </tbody>
-                    </table>
-                </div>
+                <table>
+                    <thead>
+                        <tr><th>Pangalan</th><th>Username</th><th>Password/PIN</th><th>Email</th><th>CP Number</th><th>Code Ginamit</th></tr>
+                    </thead>
+                    <tbody id="usersTableBody"><tr><td colspan="6">Naglo-load...</td></tr></tbody>
+                </table>
             </div>
         </div>
     </div>
 
-<!-- Firebase SDKs -->
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, setDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+<script>
+    const DB_URL = "https://dc-social-academy-default-rtdb.firebaseio.com/";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCgroQU_gLk3b5IzT95CfsFV9U5RttLVt4",
-      authDomain: "dc-social-academy.firebaseapp.com",
-      projectId: "dc-social-academy",
-      storageBucket: "dc-social-academy.appfirebasestorage.app",
-      messagingSenderId: "786325725785",
-      appId: "1:786325725785:web:5f3aebd72e5dc77f3fc748",
-      measurementId: "G-Y4RTC0FDR1"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    if (localStorage.getItem('current_admin') !== 'true') {
-        window.location.href = 'index.html';
-    }
-
-    window.logoutAdmin = function() {
-        localStorage.removeItem('current_admin');
-        window.location.href = 'index.html';
-    }
-
-    // 1. I-save ang Code at PIN sa Firestore
-    document.getElementById('saveCodeBtn').addEventListener('click', async function() {
-        const codeInput = document.getElementById('gen-code');
-        const pinInput = document.getElementById('gen-pin');
-        
-        const code = codeInput.value.trim();
-        const pin = pinInput.value.trim();
-
-        if(!code || !pin) {
-            alert("Pakilagay ang Access Code at PIN!");
+    window.onload = function() {
+        let user = JSON.parse(localStorage.getItem('current_user'));
+        if(!user || user.role !== 'admin') {
+            window.location.href = 'index';
             return;
         }
-
-        try {
-            const codeRef = doc(db, "generated_codes", code);
-            const docSnap = await getDoc(codeRef);
-
-            if (docSnap.exists()) {
-                alert("Ang Access Code na ito ay umiiral na!");
-                return;
-            }
-
-            await setDoc(codeRef, { code: code, pin: pin, createdAt: new Date().toISOString() });
-
-            codeInput.value = '';
-            pinInput.value = '';
-            alert("Tagumpay na nai-save ang Code at PIN sa Cloud Firestore!");
-        } catch (error) {
-            alert("Nagkaroon ng problema sa pag-save: " + error.message);
-        }
-    });
-
-    // 2. Basahin ang mga naka-register na estudyante mula sa Firestore 'academy_users' collection
-    async function loadStudents() {
-        let tableBody = document.getElementById('studentTableBody');
-        tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#777;">Nag-a-load ng data mula sa cloud...</td></tr>';
-
-        try {
-            const querySnapshot = await getDocs(collection(db, "academy_users"));
-            let allStudents = [];
-            querySnapshot.forEach((doc) => {
-                allStudents.push({ id: doc.id, ...doc.data() });
-            });
-
-            tableBody.innerHTML = '';
-
-            if (allStudents.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#777;">Wala pang naka-register na estudyante.</td></tr>';
-                return;
-            }
-
-            allStudents.forEach((student) => {
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${student.name || 'N/A'}</td>
-                    <td>${student.username || 'N/A'}</td>
-                    <td><strong>${student.pin || 'N/A'}</strong></td>
-                    <td>${student.email || 'N/A'}</td>
-                    <td>${student.cp || 'N/A'}</td>
-                    <td>${student.codeUsed || 'N/A'}</td>
-                    <td><button class="btn-block" style="background:#ff4d4d; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;" onclick="alert('Feature coming soon!')">Block</button></td>
-                `;
-                tableBody.appendChild(tr);
-            });
-        } catch (error) {
-            tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:red;">May error sa pagkarga ng data: ${error.message}</td></tr>`;
-        }
+        loadUsers();
     }
 
-    window.onload = loadStudents;
-</script>
+    function logout() {
+        localStorage.removeItem('current_user');
+        window.location.href = 'index';
+    }
 
+    async function saveCode() {
+        let code = document.getElementById('newCode').value.trim();
+        let pin = document.getElementById('newPin').value.trim();
+        if(!code || !pin) { alert('Punan ang Code at PIN!'); return; }
+
+        await fetch(`${DB_URL}/codes/${code}.json`, {
+            method: 'PUT',
+            body: JSON.stringify({ code, pin })
+        });
+        alert('Na-save na sa Cloud Database!');
+        document.getElementById('newCode').value = '';
+        document.getElementById('newPin').value = '';
+    }
+
+    async function loadUsers() {
+        let res = await fetch(`${DB_URL}/users.json`);
+        let data = await res.json();
+        let tbody = document.getElementById('usersTableBody');
+        tbody.innerHTML = '';
+        if(!data) { tbody.innerHTML = '<tr><td colspan="6">Wala pang estudyante.</td></tr>'; return; }
+
+        Object.keys(data).forEach(k => {
+            let u = data[k];
+            tbody.innerHTML += `<tr><td>${u.name}</td><td>${u.username}</td><td>${u.password}</td><td>${u.email}</td><td>${u.phone}</td><td><strong>${u.codeUsed}</strong></td></tr>`;
+        });
+    }
+</script>
 </body>
 </html>
