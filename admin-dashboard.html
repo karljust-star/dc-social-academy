@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DC Social Academy Dashboard</title>
+<title>Admin Dashboard - DC Social Academy</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
     body { background: #f7f5ef; color: #171717; }
@@ -26,6 +26,7 @@
     .profile-picture { width: 58px; height: 58px; border-radius: 50%; background: #e7d7ad; border: 2px solid #c49725; display: flex; align-items: center; justify-content: center; font-size: 25px; }
     .profile-name { font-size: 15px; font-weight: bold; }
     .profile-role { font-size: 12px; color: #a67b1b; margin-top: 4px; }
+    
     .lessons { max-width: 1100px; margin: auto; }
     .lesson { background: white; border-radius: 17px; padding: 23px 27px; margin-bottom: 16px; display: flex; align-items: center; gap: 22px; border: 1px solid #eee; box-shadow: 0 5px 18px rgba(0,0,0,0.06); cursor: pointer; }
     .lesson:hover { transform: translateX(5px); }
@@ -34,6 +35,14 @@
     .lesson-content h3 { font-size: 18px; margin-bottom: 7px; }
     .lesson-content p { font-size: 13px; color: #777; }
     .lesson-arrow { color: #c39422; font-size: 22px; }
+
+    .admin-panel-container { max-width: 1100px; margin: 30px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 18px rgba(0,0,0,0.06); }
+    .code-generator-box { background: #f9f9f9; padding: 20px; border-radius: 10px; border: 1px solid #e0e0e0; margin-bottom: 25px; }
+    .code-generator-box input { padding: 12px; margin-right: 10px; border: 1px solid #ccc; border-radius: 6px; width: 250px; font-size: 14px; margin-bottom: 10px; }
+    .code-generator-box button { padding: 12px 20px; background: #b58418; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
+    th { background: #b58418; color: white; }
 </style>
 </head>
 <body>
@@ -46,11 +55,11 @@
                 <div class="logo-subtitle">LEARN • GROW • SUCCEED</div>
             </div>
             <div class="menu">
-                <button class="active"><span class="menu-icon">🏠</span> Home</button>
+                <button class="active"><span class="menu-icon">⚙️</span> Admin Panel</button>
             </div>
         </div>
         <div class="menu">
-            <button onclick="logoutUser()"><span class="menu-icon">➔</span> Logout</button>
+            <button onclick="logoutAdmin()"><span class="menu-icon">➔</span> Logout</button>
         </div>
     </div>
 
@@ -58,22 +67,43 @@
         <div class="header">
             <div class="header-title">
                 <h1>DC SOCIAL ACADEMY</h1>
-                <p>LEARN, GROW & SUCCEED</p>
+                <p>ADMIN CONTROL CENTER</p>
             </div>
             <div class="profile">
-                <div class="profile-picture">👤</div>
+                <div class="profile-picture">🛡️</div>
                 <div>
-                    <div class="profile-name" id="display-name">Academy User</div>
-                    <div class="profile-role">Academy Partner</div>
+                    <div class="profile-name">Administrator</div>
+                    <div class="profile-role">System Admin</div>
                 </div>
             </div>
         </div>
 
-        <div style="max-width: 1100px; margin: 0 auto 25px;">
-            <h2>Welcome back! 👋</h2>
-            <p style="margin-top: 7px; color: #777;">Continue your learning journey.</p>
+        <!-- ADMIN CONTROLS -->
+        <div class="admin-panel-container">
+            <h2>Manage Students & Access Codes</h2>
+            <p style="color: #777; margin: 10px 0 20px;">Dito ka gagawa ng Code at PIN para sa mga estudyante at makikita ang listahan nila.</p>
+            
+            <div class="code-generator-box">
+                <h3 style="margin-bottom: 12px;">Mag-generate ng Bagong Code & PIN</h3>
+                <input type="text" id="gen-code" placeholder="10-Char Code"><br>
+                <input type="text" id="gen-pin" placeholder="10-Char PIN"><br>
+                <button onclick="generateNewAccessCode()">I-save ang Code at PIN</button>
+            </div>
+            
+            <h3>Listahan ng mga Naka-register na Estudyante</h3>
+            <table>
+                <thead>
+                    <tr><th>Pangalan</th><th>Username</th><th>Email</th><th>CP Number</th><th>Code na Ginamit</th></tr>
+                </thead>
+                <tbody id="admin-student-list"></tbody>
+            </table>
         </div>
-        
+
+        <!-- MGA KURSO PARA SA ADMIN -->
+        <div style="max-width: 1100px; margin: 40px auto 25px;">
+            <h2>Academy Courses</h2>
+            <p style="margin-top: 7px; color: #777;">Maaari mo ring i-view ang mga kurso rito.</p>
+        </div>
         <div class="lessons">
             <div class="lesson" onclick="window.location.href='ads.html'">
                 <div class="lesson-icon">📢</div>
@@ -105,15 +135,44 @@
 
 <script>
     window.onload = function() {
-        const currentUser = JSON.parse(localStorage.getItem('current_user'));
-        if(currentUser) {
-            document.getElementById('display-name').innerText = currentUser.name;
-        } else {
+        const isAdmin = localStorage.getItem('current_admin');
+        if(!isAdmin) {
             window.location.href = 'index.html';
+        } else {
+            loadAdminStudents();
         }
     }
-    function logoutUser() {
-        localStorage.removeItem('current_user');
+
+    function generateNewAccessCode() {
+        const code = document.getElementById('gen-code').value.trim();
+        const pin = document.getElementById('gen-pin').value.trim();
+        if(!code || !pin) { alert("Pakisagutan ang parehong Code at PIN!"); return; }
+
+        let codes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
+        if(codes.some(item => item.code === code)) { alert("Umiiral na ang code na ito!"); return; }
+
+        codes.push({ code, pin });
+        localStorage.setItem('generated_codes', JSON.stringify(codes));
+        alert("Tagumpay! Na-save na ang Code at PIN.");
+        document.getElementById('gen-code').value = '';
+        document.getElementById('gen-pin').value = '';
+    }
+
+    function loadAdminStudents() {
+        const users = JSON.parse(localStorage.getItem('academy_users') || '[]');
+        const tbody = document.getElementById('admin-student-list');
+        tbody.innerHTML = '';
+        if(users.length === 0) {
+            tbody.innerHTML = <tr><td colspan="5" style="text-align: center; color: #777;">Wala pang estudyanteng nag-register.</td></tr>;
+            return;
+        }
+        users.users.forEach(u => { // safe guard o array iteration
+            tbody.innerHTML += <tr><td><b>${u.name}</b></td><td>${u.username}</td><td>${u.email}</td><td>${u.cp}</td><td><b>${u.codeUsed}</b></td></tr>;
+        });
+    }
+
+    function logoutAdmin() {
+        localStorage.removeItem('current_admin');
         window.location.href = 'index.html';
     }
 </script>
