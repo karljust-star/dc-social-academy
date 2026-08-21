@@ -42,6 +42,8 @@
     /* Search & Table */
     .search-box { margin-bottom: 15px; display: flex; gap: 10px; }
     .search-box input { flex: 1; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; outline: none; }
+    .btn-search { background: #171717; color: #d5a22b; border: 1px solid #d5a22b; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
+    .btn-search:hover { background: #333; }
     
     table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
     th { background: #faf9f6; color: #444; padding: 10px; border-bottom: 1px solid #ddd; }
@@ -95,7 +97,8 @@
             <div class="card">
                 <h3>Listahan ng mga Naka-register na Estudyante</h3>
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Hanapin ang pangalan o username..." onkeyup="filterStudents()">
+                    <input type="text" id="searchInput" placeholder="Hanapin ang pangalan o username..." onkeypress="handleSearchKey(event)">
+                    <button class="btn-search" onclick="filterStudents()">Hanapin</button>
                 </div>
                 <div style="overflow-x: auto;">
                     <table>
@@ -103,7 +106,7 @@
                             <tr>
                                 <th>Pangalan</th>
                                 <th>Username</th>
-                                <th>Password</th>
+                                <th>Password / PIN</th>
                                 <th>Email</th>
                                 <th>CP Number</th>
                                 <th>Code na Ginamit</th>
@@ -152,38 +155,38 @@
         document.getElementById('gen-pin').value = '';
 
         alert("Tagumpay na nai-save ang Code at PIN!");
-        loadStudentsData();
+        // Automatic update rin sa code.html kung bukas
     }
 
-    // Kinukuha ang lahat ng posibleng storage key kung saan nakalagay ang mga estudyante
+    // Kinukuha ang lahat ng posibleng storage keys ng mga estudyante
     function getAllStudents() {
         let allUsers = [];
+        let keysToCheck = ['academy_users', 'users', 'dc_academy_users', 'registered_users', 'students'];
         
-        // Susi 1: academy_users
-        let data1 = localStorage.getItem('academy_users');
-        if(data1) {
-            try {
-                let parsed = JSON.parse(data1);
-                if(Array.isArray(parsed)) allUsers = allUsers.concat(parsed);
-                else if(parsed && Array.isArray(parsed.users)) allUsers = allUsers.concat(parsed.users);
-            } catch(e){}
-        }
+        keysToCheck.forEach(key => {
+            let data = localStorage.getItem(key);
+            if(data) {
+                try {
+                    let parsed = JSON.parse(data);
+                    if(Array.isArray(parsed)) {
+                        allUsers = allUsers.concat(parsed);
+                    } else if(parsed && typeof parsed === 'object') {
+                        // Kung may nested array tulad ng {users: [...]}
+                        for(let k in parsed) {
+                            if(Array.isArray(parsed[k])) {
+                                allUsers = allUsers.concat(parsed[k]);
+                            }
+                        }
+                    }
+                } catch(e){}
+            }
+        });
 
-        // Susi 2: users (baka dito nag-save ang registration page mo)
-        let data2 = localStorage.getItem('users');
-        if(data2) {
-            try {
-                let parsed = JSON.parse(data2);
-                if(Array.isArray(parsed)) allUsers = allUsers.concat(parsed);
-                else if(parsed && Array.isArray(parsed.users)) allUsers = allUsers.concat(parsed.users);
-            } catch(e){}
-        }
-
-        // Alisin ang duplicate base sa username o email kung sakali
+        // Alisin ang duplicate base sa username o email
         let uniqueUsers = [];
         let seen = new Set();
         allUsers.forEach(u => {
-            let identifier = u.username || u.email;
+            let identifier = u.username || u.email || u.name;
             if(identifier && !seen.has(identifier)) {
                 seen.add(identifier);
                 uniqueUsers.push(u);
@@ -216,16 +219,16 @@
             }
 
             tr.innerHTML = `
-                <td>${user.name || user.fullName || 'N/A'}</td>
-                <td>${user.username || 'N/A'}</td>
-                <td><strong>${user.pin || user.password || 'N/A'}</strong></td>
+                <td>${user.name || user.fullName || user.fullname || 'N/A'}</td>
+                <td>${user.username || user.user || 'N/A'}</td>
+                <td><strong>${user.pin || user.password || user.pass || 'N/A'}</strong></td>
                 <td>${user.email || 'N/A'}</td>
-                <td>${user.cp || user.phone || 'N/A'}</td>
-                <td>${user.codeUsed || user.code || 'N/A'}</td>
+                <td>${user.cp || user.phone || user.contact || 'N/A'}</td>
+                <td>${user.codeUsed || user.code || user.accessCode || 'N/A'}</td>
                 <td>
                     ${user.isBlocked ? 
-                        <button class="btn-unblock" onclick="toggleBlock('${user.username}')">Unblock</button> : 
-                        <button class="btn-block" onclick="toggleBlock('${user.username}')">Block</button>
+                        <button class="btn-unblock" onclick="toggleBlock('${user.username || user.user}')">Unblock</button> : 
+                        <button class="btn-block" onclick="toggleBlock('${user.username || user.user}')">Block</button>
                     }
                 </td>
             `;
@@ -235,12 +238,10 @@
 
     function toggleBlock(username) {
         let usersList = getAllStudents();
-        let target = usersList.find(u => u.username === username);
+        let target = usersList.find(u => (u.username === username || u.user === username));
         if(target) {
             target.isBlocked = !target.isBlocked;
-            // I-save pabalik sa parehong storage keys para sigurado
-            localStorage.setItem('academy_users', JSON.stringify({ users: usersList }));
-            localStorage.setItem('users', JSON.stringify(usersList));
+            localStorage.setItem('academy_users', JSON.stringify(usersList));
             loadStudentsData();
         }
     }
@@ -249,13 +250,20 @@
         let query = document.getElementById('searchInput').value.toLowerCase();
         let usersList = getAllStudents();
 
-        let filtered = usersList.filter(u => 
-            (u.name && u.name.toLowerCase().includes(query)) || 
-            (u.username && u.username.toLowerCase().includes(query)) ||
-            (u.email && u.email.toLowerCase().includes(query))
-        );
+        let filtered = usersList.filter(u => {
+            let name = (u.name || u.fullName || u.fullname || '').toLowerCase();
+            let uname = (u.username || u.user || '').toLowerCase();
+            let email = (u.email || '').toLowerCase();
+            return name.includes(query) || uname.includes(query) || email.includes(query);
+        });
 
         renderStudentTable(filtered);
+    }
+
+    function handleSearchKey(event) {
+        if (event.key === 'Enter') {
+            filterStudents();
+        }
     }
 
     window.onload = loadStudentsData;
