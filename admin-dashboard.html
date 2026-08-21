@@ -125,7 +125,7 @@
         window.location.href = 'index.html';
     }
 
-    // Save Code
+    // 1. I-save ang Code at PIN nang walang sablay
     document.getElementById('saveCodeBtn').addEventListener('click', function() {
         const codeInput = document.getElementById('gen-code');
         const pinInput = document.getElementById('gen-pin');
@@ -140,6 +140,13 @@
 
         try {
             let codes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
+            
+            // Suriin kung may kapareho na
+            if(codes.some(item => item.code === code)) {
+                alert("Ang Access Code na ito ay umiiral na!");
+                return;
+            }
+
             codes.push({ code: code, pin: pin });
             localStorage.setItem('generated_codes', JSON.stringify(codes));
 
@@ -151,31 +158,23 @@
         }
     });
 
-    // Load Students Data (Binabasa ang lahat ng posibleng storage keys ng registration)
+    // 2. Basahin nang tama ang estudyante mula sa 'academy_users' object format ng iyong registration page
     function loadStudents() {
         let tableBody = document.getElementById('studentTableBody');
         let allStudents = [];
 
-        // Sinusuri ang iba't ibang posibleng storage keys kung saan nakalagay ang users
-        let possibleKeys = ['academy_users', 'users', 'dc_academy_users', 'registered_users', 'students'];
-        
-        possibleKeys.forEach(key => {
-            let data = localStorage.getItem(key);
-            if (data) {
-                try {
-                    let parsed = JSON.parse(data);
-                    if (Array.isArray(parsed)) {
-                        allStudents = allStudents.concat(parsed);
-                    } else if (parsed && typeof parsed === 'object') {
-                        for (let k in parsed) {
-                            if (Array.isArray(parsed[k])) {
-                                allStudents = allStudents.concat(parsed[k]);
-                            }
-                        }
-                    }
-                } catch (e) {}
-            }
-        });
+        let savedData = localStorage.getItem('academy_users');
+        if (savedData) {
+            try {
+                let parsed = JSON.parse(savedData);
+                // Sinusuportahan pareho ang { users: [...] } o tuwirang array [...]
+                if (parsed.users && Array.isArray(parsed.users)) {
+                    allStudents = parsed.users;
+                } else if (Array.isArray(parsed)) {
+                    allStudents = parsed;
+                }
+            } catch (e) {}
+        }
 
         tableBody.innerHTML = '';
 
@@ -186,25 +185,13 @@
 
         allStudents.forEach((student) => {
             let tr = document.createElement('tr');
-            
-            // Pinagsasama ang First Name, Middle Initial, at Last Name mula sa form fields mo
-            let fullName = 'N/A';
-            if (student.firstName || student.lastName) {
-                let f = student.firstName || student.regFname || '';
-                let m = student.middleInitial || student.regMname || '';
-                let l = student.lastName || student.regLname || '';
-                fullName = ${f} ${m} ${l}.trim();
-            } else if (student.name) {
-                fullName = student.name;
-            }
-
             tr.innerHTML = `
-                <td>${fullName}</td>
-                <td>${student.username || student.user || 'N/A'}</td>
-                <td><strong>${student.pin || student.password || student.pass || 'N/A'}</strong></td>
+                <td>${student.name || 'N/A'}</td>
+                <td>${student.username || 'N/A'}</td>
+                <td><strong>${student.pin || 'N/A'}</strong></td>
                 <td>${student.email || 'N/A'}</td>
-                <td>${student.cp || student.phone || student.contact || 'N/A'}</td>
-                <td>${student.codeUsed || student.code || student.accessCode || 'N/A'}</td>
+                <td>${student.cp || 'N/A'}</td>
+                <td>${student.codeUsed || 'N/A'}</td>
                 <td><button class="btn-block" style="background:#ff4d4d; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Block</button></td>
             `;
             tableBody.appendChild(tr);
