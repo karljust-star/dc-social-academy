@@ -34,7 +34,7 @@
     .btn:hover { background: #c29122; }
     
     .register-prompt { text-align: center; margin-top: 25px; font-size: 14px; color: #666; }
-    .register-prompt a { color: #d5a22b; text-decoration: none; font-weight: bold; }
+    .register-prompt a { color: #d5a22b; text-decoration: none; font-weight: bold; cursor: pointer; }
     .register-prompt a:hover { text-decoration: underline; }
 </style>
 </head>
@@ -74,12 +74,16 @@
             <button class="btn" onclick="login()">LOGIN</button>
             
             <div class="register-prompt">
-                Don't have an account? <a href="register.html">Create account</a>
+                Don't have an account? <a onclick="goToRegister()">Create account</a>
             </div>
         </div>
     </div>
 
 <script>
+    function goToRegister() {
+        window.location.href = 'register.html';
+    }
+
     function login() {
         const user = document.getElementById('username').value.trim();
         const pass = document.getElementById('password').value.trim();
