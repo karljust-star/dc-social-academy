@@ -107,7 +107,7 @@
                             </tr>
                         </thead>
                         <tbody id="studentTableBody">
-                            <tr><td colspan="7" style="text-align:center; color:#777;">Wala pang naka-register na estudyante.</td></tr>
+                            <!-- Dynamic via JS -->
                         </tbody>
                     </table>
                 </div>
@@ -125,7 +125,7 @@
         window.location.href = 'index.html';
     }
 
-    // Direktang event listener sa halip na onclick attribute para hindi ma-block
+    // Save Code
     document.getElementById('saveCodeBtn').addEventListener('click', function() {
         const codeInput = document.getElementById('gen-code');
         const pinInput = document.getElementById('gen-pin');
@@ -139,29 +139,79 @@
         }
 
         try {
-            // Kunin ang kasalukuyang codes o gumawa ng bagong listahan
-            let existingCodes = localStorage.getItem('generated_codes');
-            let codes = [];
-            
-            if (existingCodes) {
-                codes = JSON.parse(existingCodes);
-            }
-
-            // I-push ang bagong code
+            let codes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
             codes.push({ code: code, pin: pin });
-            
-            // I-save pabalik sa localStorage
             localStorage.setItem('generated_codes', JSON.stringify(codes));
 
-            // Linisin ang input fields
             codeInput.value = '';
             pinInput.value = '';
-
             alert("Tagumpay na nai-save ang Code at PIN!");
         } catch (error) {
             alert("Nagkaroon ng problema sa pag-save: " + error.message);
         }
     });
+
+    // Load Students Data (Binabasa ang lahat ng posibleng storage keys ng registration)
+    function loadStudents() {
+        let tableBody = document.getElementById('studentTableBody');
+        let allStudents = [];
+
+        // Sinusuri ang iba't ibang posibleng storage keys kung saan nakalagay ang users
+        let possibleKeys = ['academy_users', 'users', 'dc_academy_users', 'registered_users', 'students'];
+        
+        possibleKeys.forEach(key => {
+            let data = localStorage.getItem(key);
+            if (data) {
+                try {
+                    let parsed = JSON.parse(data);
+                    if (Array.isArray(parsed)) {
+                        allStudents = allStudents.concat(parsed);
+                    } else if (parsed && typeof parsed === 'object') {
+                        for (let k in parsed) {
+                            if (Array.isArray(parsed[k])) {
+                                allStudents = allStudents.concat(parsed[k]);
+                            }
+                        }
+                    }
+                } catch (e) {}
+            }
+        });
+
+        tableBody.innerHTML = '';
+
+        if (allStudents.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#777;">Wala pang naka-register na estudyante.</td></tr>';
+            return;
+        }
+
+        allStudents.forEach((student) => {
+            let tr = document.createElement('tr');
+            
+            // Pinagsasama ang First Name, Middle Initial, at Last Name mula sa form fields mo
+            let fullName = 'N/A';
+            if (student.firstName || student.lastName) {
+                let f = student.firstName || student.regFname || '';
+                let m = student.middleInitial || student.regMname || '';
+                let l = student.lastName || student.regLname || '';
+                fullName = ${f} ${m} ${l}.trim();
+            } else if (student.name) {
+                fullName = student.name;
+            }
+
+            tr.innerHTML = `
+                <td>${fullName}</td>
+                <td>${student.username || student.user || 'N/A'}</td>
+                <td><strong>${student.pin || student.password || student.pass || 'N/A'}</strong></td>
+                <td>${student.email || 'N/A'}</td>
+                <td>${student.cp || student.phone || student.contact || 'N/A'}</td>
+                <td>${student.codeUsed || student.code || student.accessCode || 'N/A'}</td>
+                <td><button class="btn-block" style="background:#ff4d4d; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Block</button></td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+
+    window.onload = loadStudents;
 </script>
 
 </body>
