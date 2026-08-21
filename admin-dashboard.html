@@ -6,173 +6,264 @@
 <title>Admin Dashboard - DC Social Academy</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-    body { background: #f0f2f5; display: flex; height: 100vh; overflow: hidden; }
-    
-    .sidebar { width: 280px; background: #141619; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 30px 20px; }
-    .logo-container { text-align: center; margin-bottom: 40px; }
-    .logo-dc { color: #d5a22b; font-size: 50px; font-weight: 900; letter-spacing: -4px; }
-    .logo-name { font-size: 16px; font-weight: bold; color: white; }
-    .logo-name span { color: #d5a22b; }
-    
-    .nav-links { display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
-    .nav-btn { background: #d5a22b; color: black; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; text-align: left; cursor: pointer; font-size: 15px; }
-    .logout-btn { background: #1f2329; color: white; border: 1px solid #444; padding: 12px 20px; border-radius: 8px; font-weight: bold; text-align: left; cursor: pointer; }
-    .logout-btn:hover { background: #2a2f38; }
+    body { display: flex; height: 100vh; background: #f7f5ef; overflow: hidden; }
 
-    .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #ddd; padding-bottom: 20px; }
-    .header h1 { font-size: 26px; color: #141619; }
-    .admin-badge { background: #e6b135; padding: 6px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; color: black; }
+    /* Sidebar */
+    .sidebar { width: 260px; background: #171717; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 30px 20px; }
+    .sidebar-top .logo { color: #d5a22b; font-size: 35px; font-weight: 900; letter-spacing: -2px; margin-bottom: 5px; }
+    .sidebar-top .logo-sub { font-size: 13px; color: #aaa; margin-bottom: 40px; }
+    .nav-btn { background: #d5a22b; color: black; padding: 12px 15px; border-radius: 8px; font-weight: bold; text-align: center; margin-bottom: 10px; cursor: pointer; }
+    .logout-btn { background: transparent; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 10px; border-radius: 8px; font-weight: bold; text-align: center; cursor: pointer; }
+    .logout-btn:hover { background: #ff6b6b; color: white; }
 
-    .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; border: 1px solid #e1e4e8; }
-    .card h3 { margin-bottom: 15px; color: #333; font-size: 18px; }
+    /* Main Content Area */
+    .main-container { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+    .header { background: white; padding: 20px 40px; border-bottom: 1px solid #e1e4e8; display: flex; justify-content: space-between; align-items: center; }
+    .header h1 { font-size: 22px; color: #171717; }
+    .admin-badge { background: #fbf5e5; color: #d5a22b; padding: 6px 15px; border-radius: 20px; font-weight: bold; font-size: 13px; border: 1px solid #e7d7ad; }
+
+    .content-body { padding: 30px 40px; display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
+    .left-panel, .right-panel { display: flex; flex-direction: column; gap: 20px; }
+
+    .card { background: white; padding: 25px; border-radius: 12px; border: 1px solid #e1e4e8; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+    .card h3 { font-size: 16px; color: #171717; margin-bottom: 15px; border-bottom: 2px solid #f7f5ef; padding-bottom: 8px; }
+
+    /* Form Group */
     .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
     .input-group { flex: 1; display: flex; flex-direction: column; gap: 5px; }
-    .input-group label { font-size: 13px; font-weight: bold; color: #555; }
-    .input-group input { padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none; }
-    
-    .btn-save { background: #d5a22b; color: black; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 14px; }
+    .input-group label { font-size: 12px; font-weight: bold; color: #444; }
+    .input-group input { padding: 10px 12px; background: #faf9f6; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; outline: none; }
+    .input-group input:focus { border-color: #d5a22b; background: white; }
+    .btn-save { background: #d5a22b; color: black; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
     .btn-save:hover { background: #c29122; }
 
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
-    th { background: #f8f9fa; color: #333; font-weight: bold; }
+    /* Search & Table */
+    .search-box { margin-bottom: 15px; display: flex; gap: 10px; }
+    .search-box input { flex: 1; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; outline: none; }
+    
+    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+    th { background: #faf9f6; color: #444; padding: 10px; border-bottom: 1px solid #ddd; }
+    td { padding: 10px; border-bottom: 1px solid #eee; color: #333; }
+    .status-badge { padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+    .status-used { background: #e2f0d9; color: #385723; }
+    .status-unused { background: #fce4d6; color: #c65911; }
+    
+    .btn-block { background: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
+    .btn-block:hover { background: #cc0000; }
+    .btn-unblock { background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
+    .btn-unblock:hover { background: #1e7e34; }
+    .blocked-row { background-color: #ffeeee !important; }
+
+    /* Generated Codes Sidebar Widget */
+    .code-list-container { max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+    .code-item { background: #faf9f6; padding: 10px; border-radius: 6px; border: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
 </style>
 </head>
 <body>
 
+    <!-- Sidebar -->
     <div class="sidebar">
-        <div>
-            <div class="logo-container">
-                <div class="logo-dc">DC</div>
-                <div class="logo-name">SOCIAL <span>ACADEMY</span></div>
-            </div>
-            <div class="nav-links">
-                <button class="nav-btn">Admin Panel</button>
-            </div>
+        <div class="sidebar-top">
+            <div class="logo">DC</div>
+            <div class="logo-sub">SOCIAL ACADEMY</div>
+            <div class="nav-btn">Admin Panel</div>
         </div>
-        <button class="logout-btn" onclick="logoutAdmin()">Logout</button>
+        <div class="logout-btn" onclick="logoutAdmin()">Logout</div>
     </div>
 
-    <div class="main-content">
+    <!-- Main Container -->
+    <div class="main-container">
         <div class="header">
             <h1>Admin Control Center</h1>
             <div class="admin-badge">Administrator</div>
         </div>
 
-        <div class="card">
-            <h3>Mag-generate ng Bagong Code & PIN</h3>
-            <div class="form-row">
-                <div class="input-group">
-                    <label>Access Code</label>
-                    <input type="text" id="gen-code" placeholder="Halimbawa: DCSOCIAL123">
+        <div class="content-body">
+            <!-- Left Side: Generator & Student List -->
+            <div class="left-panel">
+                <!-- Generate Box -->
+                <div class="card">
+                    <h3>Mag-generate ng Bagong Code & PIN</h3>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Access Code</label>
+                            <input type="text" id="gen-code" placeholder="Halimbawa: DCSOCIAL123">
+                        </div>
+                        <div class="input-group">
+                            <label>PIN</label>
+                            <input type="text" id="gen-pin" placeholder="Halimbawa: 12345">
+                        </div>
+                    </div>
+                    <button class="btn-save" onclick="saveCode()">I-save ang Code at PIN</button>
                 </div>
-                <div class="input-group">
-                    <label>PIN</label>
-                    <input type="text" id="gen-pin" placeholder="Halimbawa: 12345">
+
+                <!-- Student List Box -->
+                <div class="card">
+                    <h3>Listahan ng mga Naka-register na Estudyante</h3>
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Hanapin ang pangalan o username..." onkeyup="filterStudents()">
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Pangalan</th>
+                                    <th>Username</th>
+                                    <th>Password</th>
+                                    <th>Email</th>
+                                    <th>CP Number</th>
+                                    <th>Code na Ginamit</th>
+                                    <th>Aksyon</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentTableBody">
+                                <!-- Dynamic via JS -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-            <button class="btn-save" onclick="generateNewAccessCode()">I-save ang Code at PIN</button>
-        </div>
 
-        <div class="card">
-            <h3>Listahan ng mga Naka-register na Estudyante</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Pangalan</th>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>CP Number</th>
-                        <th>Code na Ginamit</th>
-                    </tr>
-                </thead>
-                <tbody id="admin-student-list">
-                </tbody>
-            </table>
+            <!-- Right Side: All Generated Codes List -->
+            <div class="right-panel">
+                <div class="card">
+                    <h3>Lahat ng Na-generate na Code</h3>
+                    <div class="code-list-container" id="generatedCodesList">
+                        <!-- Dynamic via JS -->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
 <script>
-    window.onload = function() {
-        const isAdmin = localStorage.getItem('current_admin');
-        if (!isAdmin) {
-            window.location.href = 'index.html';
-        } else {
-            loadAdminStudents();
-        }
-    };
-
-    function generateNewAccessCode() {
-        const codeInput = document.getElementById('gen-code');
-        const pinInput = document.getElementById('gen-pin');
-        
-        const code = codeInput.value.trim();
-        const pin = pinInput.value.trim();
-
-        if (!code || !pin) {
-            alert("Pakisagutan ang parehong Access Code at PIN!");
-            return;
-        }
-
-        let codes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
-        
-        let exists = false;
-        for (let i = 0; i < codes.length; i++) {
-            if (codes[i].code === code) {
-                exists = true;
-                break;
-            }
-        }
-
-        if (exists) {
-            alert("Umiiral na ang code na ito sa system!");
-            return;
-        }
-
-        codes.push({ code: code, pin: pin });
-        localStorage.setItem('generated_codes', JSON.stringify(codes));
-        
-        alert("Tagumpay! Na-save na ang Access Code at PIN.");
-        codeInput.value = '';
-        pinInput.value = '';
-    }
-
-    function loadAdminStudents() {
-        let rawData = localStorage.getItem('academy_users');
-        let usersList = [];
-        
-        if (rawData) {
-            try {
-                let data = JSON.parse(rawData);
-                if (Array.isArray(data)) {
-                    usersList = data;
-                } else if (data.users && Array.isArray(data.users)) {
-                    usersList = data.users;
-                }
-            } catch (e) {
-                usersList = [];
-            }
-        }
-
-        const tbody = document.getElementById('admin-student-list');
-        tbody.innerHTML = '';
-
-        if (usersList.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #777; padding: 15px;">Wala pang estudyanteng nag-register.</td></tr>';
-            return;
-        }
-
-        for (let i = 0; i < usersList.length; i++) {
-            let u = usersList[i];
-            tbody.innerHTML += '<tr><td><b>' + (u.name || '') + '</b></td><td>' + (u.username || '') + '</td><td>' + (u.email || '') + '</td><td>' + (u.cp || '') + '</td><td><b>' + (u.codeUsed || '') + '</b></td></tr>';
-        }
+    // Security check
+    if (localStorage.getItem('current_admin') !== 'true') {
+        window.location.href = 'index.html';
     }
 
     function logoutAdmin() {
         localStorage.removeItem('current_admin');
         window.location.href = 'index.html';
     }
+
+    function saveCode() {
+        const code = document.getElementById('gen-code').value.trim();
+        const pin = document.getElementById('gen-pin').value.trim();
+
+        if(!code || !pin) {
+            alert("Pakilagay ang Access Code at PIN!");
+            return;
+        }
+
+        let codes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
+        
+        if(codes.some(item => item.code === code)) {
+            alert("Ang Access Code na ito ay umiiral na!");
+            return;
+        }
+
+        codes.push({ code: code, pin: pin });
+        localStorage.setItem('generated_codes', JSON.stringify(codes));
+
+        document.getElementById('gen-code').value = '';
+        document.getElementById('gen-pin').value = '';
+
+        alert("Tagumpay na nai-save ang Code at PIN!");
+        loadDashboardData();
+    }
+
+    function loadDashboardData() {
+        // Load Generated Codes
+        let codes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
+        let data = JSON.parse(localStorage.getItem('academy_users') || '{"users":[]}');
+        let usersList = Array.isArray(data) ? data : (data.users || []);
+
+        let codeListContainer = document.getElementById('generatedCodesList');
+        codeListContainer.innerHTML = '';
+
+        if(codes.length === 0) {
+            codeListContainer.innerHTML = '<p style="font-size:12px; color:#777;">Wala pang na-generate na code.</p>';
+        } else {
+            codes.forEach(item => {
+                // Check kung nagamit na ang code na ito ng kahit anong user
+                let isUsed = usersList.some(u => u.codeUsed === item.code);
+                let badgeClass = isUsed ? 'status-used' : 'status-unused';
+                let badgeText = isUsed ? 'Used' : 'Available';
+
+                let div = document.createElement('div');
+                div.className = 'code-item';
+                div.innerHTML = `
+                    <div><strong>${item.code}</strong> (PIN: ${item.pin})</div>
+                    <span class="status-badge ${badgeClass}">${badgeText}</span>
+                `;
+                codeListContainer.appendChild(div);
+            });
+        }
+
+        // Load Students Table
+        renderStudentTable(usersList);
+    }
+
+    function renderStudentTable(usersList) {
+        let tableBody = document.getElementById('studentTableBody');
+        tableBody.innerHTML = '';
+
+        if(usersList.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#777;">Wala pang naka-register na estudyante.</td></tr>';
+            return;
+        }
+
+        usersList.forEach((user, index) => {
+            let tr = document.createElement('tr');
+            if(user.isBlocked) {
+                tr.className = 'blocked-row';
+            }
+
+            tr.innerHTML = `
+                <td>${user.name || ''}</td>
+                <td>${user.username || ''}</td>
+                <td><strong>${user.pin || ''}</strong></td>
+                <td>${user.email || ''}</td>
+                <td>${user.cp || ''}</td>
+                <td>${user.codeUsed || 'N/A'}</td>
+                <td>
+                    ${user.isBlocked ? 
+                        <button class="btn-unblock" onclick="toggleBlock(${index})">Unblock</button> : 
+                        <button class="btn-block" onclick="toggleBlock(${index})">Block</button>
+                    }
+                </td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+
+    function toggleBlock(index) {
+        let data = JSON.parse(localStorage.getItem('academy_users') || '{"users":[]}');
+        let usersList = Array.isArray(data) ? data : (data.users || []);
+
+        usersList[index].isBlocked = !usersList[index].isBlocked;
+        
+        localStorage.setItem('academy_users', JSON.stringify({ users: usersList }));
+        loadDashboardData();
+    }
+
+    function filterStudents() {
+        let query = document.getElementById('searchInput').value.toLowerCase();
+        let data = JSON.parse(localStorage.getItem('academy_users') || '{"users":[]}');
+        let usersList = Array.isArray(data) ? data : (data.users || []);
+
+        let filtered = usersList.filter(u => 
+            (u.name && u.name.toLowerCase().includes(query)) || 
+            (u.username && u.username.toLowerCase().includes(query)) ||
+            (u.email && u.email.toLowerCase().includes(query))
+        );
+
+        renderStudentTable(filtered);
+    }
+
+    // Load data on page load
+    window.onload = loadDashboardData;
 </script>
 
 </body>
