@@ -1,108 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard - DC Social Academy</title>
-<style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-    body { background: #f0f2f5; display: flex; height: 100vh; overflow: hidden; }
-    
-    /* Sidebar */
-    .sidebar { width: 280px; background: #141619; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 30px 20px; }
-    .logo-container { text-align: center; margin-bottom: 40px; }
-    .logo-dc { color: #d5a22b; font-size: 50px; font-weight: 900; letter-spacing: -4px; }
-    .logo-name { font-size: 16px; font-weight: bold; color: white; }
-    .logo-name span { color: #d5a22b; }
-    
-    .nav-links { display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
-    .nav-btn { background: #d5a22b; color: black; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; text-align: left; cursor: pointer; font-size: 15px; }
-    .logout-btn { background: #1f2329; color: white; border: 1px solid #444; padding: 12px 20px; border-radius: 8px; font-weight: bold; text-align: left; cursor: pointer; }
-    .logout-btn:hover { background: #2a2f38; }
-
-    /* Main Content */
-    .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #ddd; padding-bottom: 20px; }
-    .header h1 { font-size: 26px; color: #141619; }
-    .admin-badge { background: #e6b135; padding: 6px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; color: black; }
-
-    /* Card Box */
-    .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; border: 1px solid #e1e4e8; }
-    .card h3 { margin-bottom: 15px; color: #333; font-size: 18px; }
-    .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
-    .input-group { flex: 1; display: flex; flex-direction: column; gap: 5px; }
-    .input-group label { font-size: 13px; font-weight: bold; color: #555; }
-    .input-group input { padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none; }
-    .input-group input:focus { border-color: #d5a22b; }
-    
-    .btn-save { background: #d5a22b; color: black; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 14px; }
-    .btn-save:hover { background: #c29122; }
-
-    /* Table */
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
-    th { background: #f8f9fa; color: #333; font-weight: bold; }
-</style>
-</head>
-<body>
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div>
-            <div class="logo-container">
-                <div class="logo-dc">DC</div>
-                <div class="logo-name">SOCIAL <span>ACADEMY</span></div>
-            </div>
-            <div class="nav-links">
-                <button class="nav-btn">Admin Panel</button>
-            </div>
-        </div>
-        <button class="logout-btn" onclick="logoutAdmin()">Logout</button>
-    </div>
-
-    <!-- Main Content Area -->
-    <div class="main-content">
-        <div class="header">
-            <h1>Admin Control Center</h1>
-            <div class="admin-badge">Administrator</div>
-        </div>
-
-        <!-- Code Generator Section -->
-        <div class="card">
-            <h3>Mag-generate ng Bagong Code & PIN</h3>
-            <div class="form-row">
-                <div class="input-group">
-                    <label>Access Code</label>
-                    <input type="text" id="gen-code" placeholder="Halimbawa: DCSOCIAL123">
-                </div>
-                <div class="input-group">
-                    <label>PIN</label>
-                    <input type="text" id="gen-pin" placeholder="Halimbawa: 12345">
-                </div>
-            </div>
-            <button class="btn-save" onclick="generateNewAccessCode()">I-save ang Code at PIN</button>
-        </div>
-
-        <!-- Students List Section -->
-        <div class="card">
-            <h3>Listahan ng mga Naka-register na Estudyante</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Pangalan</th>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>CP Number</th>
-                        <th>Code na Ginamit</th>
-                    </tr>
-                </thead>
-                <tbody id="admin-student-list">
-                    <!-- Dynamic Data dito -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-
 <script>
     window.onload = function() {
         const isAdmin = localStorage.getItem('current_admin');
@@ -114,35 +9,49 @@
     }
 
     function generateNewAccessCode() {
-        const codeInput = document.getElementById('gen-code');
-        const pinInput = document.getElementById('gen-pin');
-        
-        const code = codeInput.value.trim();
-        const pin = pinInput.value.trim();
+        try {
+            const codeInput = document.getElementById('gen-code');
+            const pinInput = document.getElementById('gen-pin');
+            
+            const code = codeInput.value.trim();
+            const pin = pinInput.value.trim();
 
-        if(!code || !pin) { 
-            alert("Pakisagutan ang parehong Access Code at PIN!"); 
-            return; 
+            if(!code || !pin) { 
+                alert("Pakisagutan ang parehong Access Code at PIN!"); 
+                return; 
+            }
+
+            let codes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
+            
+            // Check kung existing na ang code
+            let isExist = codes.some(function(item) {
+                return item.code === code;
+            });
+
+            if(isExist) { 
+                alert("Umiiral na ang code na ito sa system!"); 
+                return; 
+            }
+
+            codes.push({ code: code, pin: pin });
+            localStorage.setItem('generated_codes', JSON.stringify(codes));
+            
+            alert("Tagumpay! Na-save na ang Access Code at PIN.");
+            codeInput.value = '';
+            pinInput.value = '';
+        } catch (error) {
+            alert("May error: " + error.message);
         }
-
-        let codes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
-        
-        // Check kung existing na ang code
-        if(codes.some(item => item.code === code)) { 
-            alert("Umiiral na ang code na ito sa system!"); 
-            return; 
-        }
-
-        codes.push({ code: code, pin: pin });
-        localStorage.setItem('generated_codes', JSON.stringify(codes));
-        
-        alert("Tagumpay! Na-save na ang Access Code at PIN.");
-        codeInput.value = '';
-        pinInput.value = '';
     }
 
     function loadAdminStudents() {
-        const data = JSON.parse(localStorage.getItem('academy_users') || '{"users":[]}');
+        let data;
+        try {
+            data = JSON.parse(localStorage.getItem('academy_users') || '{"users":[]}');
+        } catch(e) {
+            data = { users: [] };
+        }
+        
         const tbody = document.getElementById('admin-student-list');
         tbody.innerHTML = '';
         
@@ -163,6 +72,3 @@
         window.location.href = 'index.html';
     }
 </script>
-
-</body>
-</html>
