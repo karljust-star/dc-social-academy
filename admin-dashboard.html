@@ -12,7 +12,7 @@
     .sidebar { width: 280px; background: #141619; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 30px 20px; }
     .logo-container { text-align: center; margin-bottom: 40px; }
     .logo-dc { color: #d5a22b; font-size: 50px; font-weight: 900; letter-spacing: -4px; }
-    .logo-name { font-size: 16px; font-weight: bold; }
+    .logo-name { font-size: 16px; font-weight: bold; color: white; }
     .logo-name span { color: #d5a22b; }
     
     .nav-links { display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
@@ -32,7 +32,8 @@
     .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
     .input-group { flex: 1; display: flex; flex-direction: column; gap: 5px; }
     .input-group label { font-size: 13px; font-weight: bold; color: #555; }
-    .input-group input { padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+    .input-group input { padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none; }
+    .input-group input:focus { border-color: #d5a22b; }
     
     .btn-save { background: #d5a22b; color: black; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 14px; }
     .btn-save:hover { background: #c29122; }
@@ -120,22 +121,22 @@
         const pin = pinInput.value.trim();
 
         if(!code || !pin) { 
-            alert("Pakisagutan ang parehong Code at PIN!"); 
+            alert("Pakisagutan ang parehong Access Code at PIN!"); 
             return; 
         }
 
         let codes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
         
-        // Check kung existing na
+        // Check kung existing na ang code
         if(codes.some(item => item.code === code)) { 
-            alert("Umiiral na ang code na ito!"); 
+            alert("Umiiral na ang code na ito sa system!"); 
             return; 
         }
 
         codes.push({ code: code, pin: pin });
         localStorage.setItem('generated_codes', JSON.stringify(codes));
         
-        alert("Tagumpay! Na-save na ang Code at PIN.");
+        alert("Tagumpay! Na-save na ang Access Code at PIN.");
         codeInput.value = '';
         pinInput.value = '';
     }
