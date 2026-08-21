@@ -41,12 +41,12 @@
 </head>
 <body>
 
-    <!-- Sidebar -->
+    <!-- Sidebar (Naka-turo na sa index.html dahil ito na ang admin panel) -->
     <div class="sidebar">
         <div class="sidebar-top">
             <div class="logo">DC</div>
             <div class="logo-sub">SOCIAL ACADEMY</div>
-            <a href="admin-dashboard.html" class="nav-btn">Admin Panel</a>
+            <a href="index.html" class="nav-btn">Admin Panel</a>
             <a href="code.html" class="nav-btn active">CODE (Listahan)</a>
         </div>
         <div class="logout-btn" onclick="logoutAdmin()">Logout</div>
@@ -81,10 +81,6 @@
     </div>
 
 <script>
-    if (localStorage.getItem('current_admin') !== 'true') {
-        window.location.href = 'index.html';
-    }
-
     function logoutAdmin() {
         localStorage.removeItem('current_admin');
         window.location.href = 'index.html';
@@ -93,7 +89,6 @@
     function loadCodesPage() {
         let codes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
         
-        // Kunin din ang mga estudyante para malaman kung alin ang nagamit na
         let allUsers = [];
         let data1 = localStorage.getItem('academy_users');
         if(data1) {
