@@ -6,44 +6,76 @@
 <title>DC Social Academy - Login</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-    body { background: #08090b; display: flex; justify-content: center; align-items: center; height: 100vh; color: white; }
-    .login-box { background: #141619; padding: 40px; border-radius: 20px; width: 420px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #333; }
-    .logo { text-align: center; margin-bottom: 25px; }
-    .logo-dc { color: #d5a22b; font-size: 60px; font-weight: 900; letter-spacing: -5px; }
-    .logo-name { font-size: 20px; font-weight: bold; margin-top: -5px; color: white; }
-    .logo-name span { color: #d5a22b; }
-    .input-group { margin-bottom: 18px; }
-    .input-group label { display: block; font-size: 14px; margin-bottom: 6px; color: #ccc; }
-    .input-group input { width: 100%; padding: 12px 15px; background: #1f2329; border: 1px solid #444; border-radius: 8px; color: white; font-size: 15px; }
-    .input-group input:focus { border-color: #d5a22b; outline: none; }
-    .btn { width: 100%; padding: 12px; background: #d5a22b; border: none; border-radius: 8px; color: black; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 5px; }
-    .btn:hover { background: #e6b135; }
-    .footer-links { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; font-size: 14px; color: #aaa; }
-    .footer-links a { color: #d5a22b; text-decoration: none; font-weight: bold; }
-    .footer-links a:hover { text-decoration: underline; }
+    body { display: flex; height: 100vh; background: #f7f5ef; }
+    
+    /* Left Side Branding */
+    .left-side { flex: 1; background: #f7f5ef; padding: 60px; display: flex; flex-direction: column; justify-content: center; border-right: 1px solid #e0ded8; }
+    .left-logo { color: #d5a22b; font-size: 55px; font-weight: 900; letter-spacing: -4px; margin-bottom: 20px; }
+    .left-side h1 { font-size: 42px; color: #171717; margin-bottom: 15px; line-height: 1.2; }
+    .left-side h1 span { color: #d5a22b; }
+    .left-side p { color: #666; font-size: 16px; margin-bottom: 30px; line-height: 1.5; }
+    .feature-box { background: white; padding: 15px 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #eee; box-shadow: 0 4px 12px rgba(0,0,0,0.03); max-width: 450px; }
+    .feature-box h4 { font-size: 15px; color: #171717; margin-bottom: 3px; }
+    .feature-box p { font-size: 13px; color: #777; margin: 0; }
+
+    /* Right Side Login */
+    .right-side { width: 500px; background: white; display: flex; align-items: center; justify-content: center; padding: 40px; }
+    .login-container { width: 100%; max-width: 380px; }
+    .login-icon { width: 60px; height: 60px; background: #fbf5e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 20px; border: 2px solid #e7d7ad; }
+    .login-container h2 { font-size: 26px; color: #171717; margin-bottom: 8px; }
+    .login-container p { font-size: 14px; color: #777; margin-bottom: 25px; }
+    
+    .input-group { margin-bottom: 20px; }
+    .input-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #444; }
+    .input-group input { width: 100%; padding: 12px 15px; background: #faf9f6; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; outline: none; }
+    .input-group input:focus { border-color: #d5a22b; background: white; }
+    
+    .btn { width: 100%; padding: 12px; background: #d5a22b; border: none; border-radius: 8px; color: black; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 5px; }
+    .btn:hover { background: #c29122; }
+    
+    .register-prompt { text-align: center; margin-top: 25px; font-size: 14px; color: #666; }
+    .register-prompt a { color: #d5a22b; text-decoration: none; font-weight: bold; }
+    .register-prompt a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
 
-    <div class="login-box">
-        <div class="logo">
-            <div class="logo-dc">DC</div>
-            <div class="logo-name">SOCIAL <span>ACADEMY</span></div>
-        </div>
+    <!-- Left Side -->
+    <div class="left-side">
+        <div class="left-logo">DC</div>
+        <h1>Welcome to<br><span>DC SOCIAL ACADEMY</span></h1>
+        <p>Your all-in-one platform to learn, grow, and master digital marketing and online success.</p>
         
-        <div class="input-group">
-            <label>Username</label>
-            <input type="text" id="username" placeholder="Enter your username">
+        <div class="feature-box">
+            <h4>🎓 Step-by-step Tutorials</h4>
+            <p>Easy to follow training designed for beginners and pros.</p>
         </div>
-        <div class="input-group">
-            <label>Password / PIN</label>
-            <input type="password" id="password" placeholder="Enter your password or PIN">
+        <div class="feature-box">
+            <h4>🚀 Practical Strategies</h4>
+            <p>Real-world applications to scale your digital career.</p>
         </div>
-        <button class="btn" onclick="login()">Login</button>
-        
-        <div class="footer-links">
-            <span>Wala pang account?</span>
-            <a href="register.html">Gumawa dito</a>
+    </div>
+
+    <!-- Right Side Login -->
+    <div class="right-side">
+        <div class="login-container">
+            <div class="login-icon">👤</div>
+            <h2>Login to your account</h2>
+            <p>Enter your credentials to access your learning dashboard.</p>
+            
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Enter your username">
+            </div>
+            <div class="input-group">
+                <label>Password / PIN</label>
+                <input type="password" id="password" placeholder="Enter your password or PIN">
+            </div>
+            <button class="btn" onclick="login()">LOGIN</button>
+            
+            <div class="register-prompt">
+                Don't have an account? <a href="register.html">Create account</a>
+            </div>
         </div>
     </div>
 
@@ -57,7 +89,7 @@
             return;
         }
 
-        // Check kung Admin ang nag-login
+        // Admin login check
         if(user === 'admin134h' && pass === 'adminpassword123') {
             localStorage.setItem('current_admin', 'true');
             localStorage.removeItem('current_user');
@@ -65,7 +97,7 @@
             return;
         }
 
-        // Check kung registered student
+        // Student login check
         let data = JSON.parse(localStorage.getItem('academy_users') || '{"users":[]}');
         let usersList = Array.isArray(data) ? data : (data.users || []);
         
