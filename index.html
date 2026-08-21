@@ -3,128 +3,234 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DC Social Academy - Login</title>
+<title>Admin Dashboard - DC Social Academy</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-    body { display: flex; height: 100vh; background: #f7f5ef; overflow-x: hidden; }
-    
-    /* Left Side Branding */
-    .left-side { flex: 1; background: #f7f5ef; padding: 60px; display: flex; flex-direction: column; justify-content: center; border-right: 1px solid #e0ded8; }
-    .left-logo { color: #d5a22b; font-size: 55px; font-weight: 900; letter-spacing: -4px; margin-bottom: 20px; }
-    .left-side h1 { font-size: 42px; color: #171717; margin-bottom: 15px; line-height: 1.2; }
-    .left-side h1 span { color: #d5a22b; }
-    .left-side p { color: #666; font-size: 16px; margin-bottom: 30px; line-height: 1.5; }
-    .feature-box { background: white; padding: 15px 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #eee; box-shadow: 0 4px 12px rgba(0,0,0,0.03); max-width: 450px; }
-    .feature-box h4 { font-size: 15px; color: #171717; margin-bottom: 3px; }
-    .feature-box p { font-size: 13px; color: #777; margin: 0; }
+    body { display: flex; height: 100vh; background: #f7f5ef; overflow: hidden; }
 
-    /* Right Side Login */
-    .right-side { width: 500px; background: white; display: flex; align-items: center; justify-content: center; padding: 40px; flex-shrink: 0; }
-    .login-container { width: 100%; max-width: 380px; }
-    .login-icon { width: 60px; height: 60px; background: #fbf5e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 20px; border: 2px solid #e7d7ad; }
-    .login-container h2 { font-size: 26px; color: #171717; margin-bottom: 8px; }
-    .login-container p { font-size: 14px; color: #777; margin-bottom: 25px; }
+    /* Sidebar */
+    .sidebar { width: 280px; background: #171717; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 25px 15px; flex-shrink: 0; transition: 0.3s; }
+    .sidebar-top .logo { color: #d5a22b; font-size: 32px; font-weight: 900; letter-spacing: -2px; margin-bottom: 2px; }
+    .sidebar-top .logo-sub { font-size: 12px; color: #aaa; margin-bottom: 20px; }
     
-    .input-group { margin-bottom: 20px; }
-    .input-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #444; }
-    .input-group input { width: 100%; padding: 12px 15px; background: #faf9f6; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; outline: none; }
+    .nav-btn { background: #d5a22b; color: black; padding: 12px 15px; border-radius: 8px; font-weight: bold; text-align: center; margin-bottom: 10px; font-size: 14px; cursor: pointer; display: block; text-decoration: none; }
+    .nav-btn:hover { background: #c29122; }
+    
+    .logout-btn { background: transparent; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 10px; border-radius: 8px; font-weight: bold; text-align: center; cursor: pointer; margin-top: 15px; }
+    .logout-btn:hover { background: #ff6b6b; color: white; }
+
+    /* Main Content Area */
+    .main-container { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
+    .header { background: white; padding: 20px 40px; border-bottom: 1px solid #e1e4e8; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+    .header h1 { font-size: 22px; color: #171717; }
+    .admin-badge { background: #fbf5e5; color: #d5a22b; padding: 6px 15px; border-radius: 20px; font-weight: bold; font-size: 13px; border: 1px solid #e7d7ad; }
+
+    .content-body { padding: 30px 40px; display: flex; flex-direction: column; gap: 20px; max-width: 1200px; width: 100%; }
+
+    .card { background: white; padding: 25px; border-radius: 12px; border: 1px solid #e1e4e8; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+    .card h3 { font-size: 16px; color: #171717; margin-bottom: 15px; border-bottom: 2px solid #f7f5ef; padding-bottom: 8px; }
+
+    /* Form Group */
+    .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
+    .input-group { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+    .input-group label { font-size: 12px; font-weight: bold; color: #444; }
+    .input-group input { padding: 10px 12px; background: #faf9f6; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; outline: none; width: 100%; }
     .input-group input:focus { border-color: #d5a22b; background: white; }
-    
-    .btn { width: 100%; padding: 12px; background: #d5a22b; border: none; border-radius: 8px; color: black; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 5px; }
-    .btn:hover { background: #c29122; }
-    
-    .register-prompt { text-align: center; margin-top: 25px; font-size: 14px; color: #666; }
-    .register-prompt a { color: #d5a22b; text-decoration: none; font-weight: bold; cursor: pointer; }
-    .register-prompt a:hover { text-decoration: underline; }
+    .btn-save { background: #d5a22b; color: black; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
+    .btn-save:hover { background: #c29122; }
 
-    /* MOBILE RESPONSIVE MEDIA QUERY (Para sa Cellphone) */
-    @media (max-width: 768px) {
+    /* Search & Table */
+    .search-box { margin-bottom: 15px; display: flex; gap: 10px; }
+    .search-box input { flex: 1; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; outline: none; }
+    .btn-search { background: #171717; color: #d5a22b; border: 1px solid #d5a22b; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
+    
+    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; white-space: nowrap; }
+    th { background: #faf9f6; color: #444; padding: 10px; border-bottom: 1px solid #ddd; }
+    td { padding: 10px; border-bottom: 1px solid #eee; color: #333; }
+
+    /* MOBILE RESPONSIVE MEDIA QUERY */
+    @media (max-width: 900px) {
         body { flex-direction: column; height: auto; overflow: auto; }
-        .left-side { padding: 30px 20px; border-right: none; border-bottom: 1px solid #e0ded8; }
-        .left-logo { font-size: 40px; margin-bottom: 10px; }
-        .left-side h1 { font-size: 28px; }
-        .feature-box { display: none; } /* Itinatago muna ang feature boxes sa CP para mas mabilis makita ang login form */
-        .right-side { width: 100%; padding: 30px 20px; }
+        .sidebar { width: 100%; height: auto; flex-direction: row; align-items: center; padding: 15px 20px; flex-wrap: wrap; gap: 10px; }
+        .sidebar-top { display: flex; align-items: center; gap: 15px; width: 100%; justify-content: space-between; }
+        .sidebar-top .logo { font-size: 24px; margin-bottom: 0; }
+        .sidebar-top .logo-sub { display: none; }
+        .sidebar-top .nav-btn { display: inline-block; margin-bottom: 0; padding: 8px 12px; font-size: 12px; }
+        .logout-btn { margin-top: 0; padding: 8px 12px; font-size: 12px; width: 100%; text-align: center; }
+        .main-container { height: auto; overflow: visible; }
+        .header { padding: 15px 20px; flex-direction: column; align-items: flex-start; gap: 10px; }
+        .content-body { padding: 20px; }
+        .form-row { flex-direction: column; gap: 15px; }
     }
 </style>
 </head>
 <body>
 
-    <!-- Left Side -->
-    <div class="left-side">
-        <div class="left-logo">DC</div>
-        <h1>Welcome to<br><span>DC SOCIAL ACADEMY</span></h1>
-        <p>Your all-in-one platform to learn, grow, and master digital marketing and online success.</p>
-        
-        <div class="feature-box">
-            <h4>🎓 Step-by-step Tutorials</h4>
-            <p>Easy to follow training designed for beginners and pros.</p>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-top" style="display: flex; align-items: center; width: 100%;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="logo">DC</div>
+                <div class="logo-sub" style="margin-bottom:0;">SOCIAL ACADEMY</div>
+            </div>
+            <div style="display: flex; gap: 5px;">
+                <a href="admin-dashboard.html" class="nav-btn" style="margin-bottom:0;">Panel</a>
+                <a href="code.html" class="nav-btn" style="background: #222; color: #d5a22b; border: 1px solid #d5a22b; margin-bottom:0;">CODE</a>
+            </div>
         </div>
-        <div class="feature-box">
-            <h4>🚀 Practical Strategies</h4>
-            <p>Real-world applications to scale your digital career.</p>
+        <div class="logout-btn" onclick="logoutAdmin()">Logout</div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="header">
+            <h1>Admin Control Center</h1>
+            <div class="admin-badge">Administrator</div>
+        </div>
+
+        <div class="content-body">
+            <!-- 1. Generate Box -->
+            <div class="card">
+                <h3>Mag-generate ng Bagong Code & PIN</h3>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Access Code</label>
+                        <input type="text" id="gen-code" placeholder="Halimbawa: DCSOCIAL123">
+                    </div>
+                    <div class="input-group">
+                        <label>PIN</label>
+                        <input type="text" id="gen-pin" placeholder="Halimbawa: 12345">
+                    </div>
+                </div>
+                <button class="btn-save" id="saveCodeBtn">I-save ang Code at PIN</button>
+            </div>
+
+            <!-- 2. Student List Box -->
+            <div class="card">
+                <h3>Listahan ng mga Naka-register na Estudyante</h3>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Hanapin ang pangalan o username...">
+                    <button class="btn-search" id="searchBtn">Hanapin</button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pangalan</th>
+                                <th>Username</th>
+                                <th>Password / PIN</th>
+                                <th>Email</th>
+                                <th>CP Number</th>
+                                <th>Code na Ginamit</th>
+                                <th>Aksyon</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody">
+                            <!-- Dynamic via Firebase JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Right Side Login -->
-    <div class="right-side">
-        <div class="login-container">
-            <div class="login-icon">👤</div>
-            <h2>Login to your account</h2>
-            <p>Enter your credentials to access your learning dashboard.</p>
-            
-            <div class="input-group">
-                <label>Username</label>
-                <input type="text" id="username" placeholder="Enter your username">
-            </div>
-            <div class="input-group">
-                <label>Password / PIN</label>
-                <input type="password" id="password" placeholder="Enter your password or PIN">
-            </div>
-            <button class="btn" onclick="login()">LOGIN</button>
-            
-            <div class="register-prompt">
-                Don't have an account? <a onclick="goToRegister()">Create account</a>
-            </div>
-        </div>
-    </div>
+<!-- Firebase SDKs -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, setDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-<script>
-    function goToRegister() {
-        window.location.href = 'register.html';
+    const firebaseConfig = {
+      apiKey: "AIzaSyCgroQU_gLk3b5IzT95CfsFV9U5RttLVt4",
+      authDomain: "dc-social-academy.firebaseapp.com",
+      projectId: "dc-social-academy",
+      storageBucket: "dc-social-academy.appfirebasestorage.app",
+      messagingSenderId: "786325725785",
+      appId: "1:786325725785:web:5f3aebd72e5dc77f3fc748",
+      measurementId: "G-Y4RTC0FDR1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    if (localStorage.getItem('current_admin') !== 'true') {
+        window.location.href = 'index.html';
     }
 
-    function login() {
-        const user = document.getElementById('username').value.trim();
-        const pass = document.getElementById('password').value.trim();
+    window.logoutAdmin = function() {
+        localStorage.removeItem('current_admin');
+        window.location.href = 'index.html';
+    }
 
-        if(!user || !pass) {
-            alert("Pakilagay ang username at password!");
-            return;
-        }
-
-        // Admin login check
-        if(user === 'admin134h' && pass === 'adminpassword123') {
-            localStorage.setItem('current_admin', 'true');
-            localStorage.removeItem('current_user');
-            window.location.href = 'admin-dashboard.html';
-            return;
-        }
-
-        // Student login check
-        let data = JSON.parse(localStorage.getItem('academy_users') || '{"users":[]}');
-        let usersList = Array.isArray(data) ? data : (data.users || []);
+    // 1. I-save ang Code at PIN sa Firestore
+    document.getElementById('saveCodeBtn').addEventListener('click', async function() {
+        const codeInput = document.getElementById('gen-code');
+        const pinInput = document.getElementById('gen-pin');
         
-        let foundUser = usersList.find(u => u.username === user && u.pin === pass);
+        const code = codeInput.value.trim();
+        const pin = pinInput.value.trim();
 
-        if(foundUser) {
-            localStorage.setItem('current_user', JSON.stringify(foundUser));
-            localStorage.removeItem('current_admin');
-            window.location.href = 'dashboard.html';
-        } else {
-            alert("Maling Username o Password/PIN!");
+        if(!code || !pin) {
+            alert("Pakilagay ang Access Code at PIN!");
+            return;
+        }
+
+        try {
+            const codeRef = doc(db, "generated_codes", code);
+            const docSnap = await getDoc(codeRef);
+
+            if (docSnap.exists()) {
+                alert("Ang Access Code na ito ay umiiral na!");
+                return;
+            }
+
+            await setDoc(codeRef, { code: code, pin: pin, createdAt: new Date().toISOString() });
+
+            codeInput.value = '';
+            pinInput.value = '';
+            alert("Tagumpay na nai-save ang Code at PIN sa Cloud Firestore!");
+        } catch (error) {
+            alert("Nagkaroon ng problema sa pag-save: " + error.message);
+        }
+    });
+
+    // 2. Basahin ang mga naka-register na estudyante mula sa Firestore 'academy_users' collection
+    async function loadStudents() {
+        let tableBody = document.getElementById('studentTableBody');
+        tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#777;">Nag-a-load ng data mula sa cloud...</td></tr>';
+
+        try {
+            const querySnapshot = await getDocs(collection(db, "academy_users"));
+            let allStudents = [];
+            querySnapshot.forEach((doc) => {
+                allStudents.push({ id: doc.id, ...doc.data() });
+            });
+
+            tableBody.innerHTML = '';
+
+            if (allStudents.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#777;">Wala pang naka-register na estudyante.</td></tr>';
+                return;
+            }
+
+            allStudents.forEach((student) => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${student.name || 'N/A'}</td>
+                    <td>${student.username || 'N/A'}</td>
+                    <td><strong>${student.pin || 'N/A'}</strong></td>
+                    <td>${student.email || 'N/A'}</td>
+                    <td>${student.cp || 'N/A'}</td>
+                    <td>${student.codeUsed || 'N/A'}</td>
+                    <td><button class="btn-block" style="background:#ff4d4d; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;" onclick="alert('Feature coming soon!')">Block</button></td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        } catch (error) {
+            tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:red;">May error sa pagkarga ng data: ${error.message}</td></tr>`;
         }
     }
+
+    window.onload = loadStudents;
 </script>
 
 </body>
