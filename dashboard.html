@@ -63,8 +63,9 @@
     .admin-only { display: none; }
     .admin-panel-container { max-width: 1100px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 18px rgba(0,0,0,0.06); }
     .code-generator-box { background: #f9f9f9; padding: 20px; border-radius: 10px; border: 1px solid #e0e0e0; margin-bottom: 25px; }
-    .code-generator-box input { padding: 10px; margin-right: 10px; border: 1px solid #ccc; border-radius: 6px; width: 200px; }
-    .code-generator-box button { padding: 10px 20px; background: #b58418; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    .code-generator-box input { padding: 12px; margin-right: 10px; border: 1px solid #ccc; border-radius: 6px; width: 250px; font-size: 14px; margin-bottom: 10px; }
+    .code-generator-box button { padding: 12px 20px; background: #b58418; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    .code-generator-box button:hover { background: #9a6d13; }
     
     table { width: 100%; border-collapse: collapse; margin-top: 15px; }
     th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
@@ -84,7 +85,7 @@
 
             <div class="menu">
                 <a href="#" onclick="showStudentView()" id="menu-home" class="active"><span class="menu-icon">🏠</span> Home</a>
-                <!-- Lalabas lang ito kapag Admin -->
+                <!-- Lalabas lang ito kapag nag-log in bilang admin -->
                 <a href="#" onclick="showAdminView()" id="admin-menu" class="admin-only"><span class="menu-icon">⚙️</span> Manage Students</a>
             </div>
 
@@ -177,15 +178,15 @@
         <div id="admin-dashboard-view" class="admin-only">
             <div class="admin-panel-container">
                 <h2>Admin Control Center</h2>
-                <p style="color: #777; margin-bottom: 20px;">Gumawa ng 10-character Code at PIN para ibigay sa mga bagong estudyante.</p>
+                <p style="color: #777; margin-bottom: 20px;">Dito ka gagawa ng 10-character Code at PIN para maibigay sa mga bagong estudyante.</p>
 
-                <!-- GENERATOR -->
+                <!-- CODE GENERATOR BOX -->
                 <div class="code-generator-box">
-                    <h3 style="margin-bottom: 10px;">Mag-generate ng Bagong Code & PIN</h3>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <input type="text" id="gen-code" placeholder="10-Char Code (e.g. DCHWUWB454)" maxlength="15">
-                        <input type="text" id="gen-pin" placeholder="10-Char PIN (e.g. HWOWHDBLWB)" maxlength="15">
-                        <button onclick="generateNewAccessCode()">I-save ang Code</button>
+                    <h3 style="margin-bottom: 12px;">Mag-generate ng Bagong Code & PIN</h3>
+                    <div>
+                        <input type="text" id="gen-code" placeholder="10-Char Code (e.g. DCHWUWB454)" maxlength="20"><br>
+                        <input type="text" id="gen-pin" placeholder="10-Char PIN (e.g. HWOWHDBLWB)" maxlength="20"><br>
+                        <button onclick="generateNewAccessCode()">I-save ang Code at PIN</button>
                     </div>
                 </div>
 
@@ -216,6 +217,7 @@
         const isAdmin = localStorage.getItem('current_admin');
 
         if(isAdmin) {
+            // Ipakita ang Manage Students button sa sidebar kung admin
             document.getElementById('admin-menu').style.display = 'flex';
             document.getElementById('display-name').innerText = "Administrator";
             document.getElementById('display-role').innerText = "System Admin";
@@ -253,7 +255,6 @@
 
         let generatedCodes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
         
-        // Check kung may kapareho na
         if(generatedCodes.some(item => item.code === code)) {
             alert("Ang code na ito ay umiiral na sa sistema!");
             return;
