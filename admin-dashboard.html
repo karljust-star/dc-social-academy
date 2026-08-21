@@ -143,6 +143,7 @@
 
         let codes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
         
+        // Suriin kung may kapareho na
         if(codes.some(item => item.code === code)) {
             alert("Ang Access Code na ito ay umiiral na!");
             return;
@@ -155,47 +156,19 @@
         document.getElementById('gen-pin').value = '';
 
         alert("Tagumpay na nai-save ang Code at PIN!");
-        // Automatic update rin sa code.html kung bukas
     }
 
-    // Kinukuha ang lahat ng posibleng storage keys ng mga estudyante
     function getAllStudents() {
         let allUsers = [];
-        let keysToCheck = ['academy_users', 'users', 'dc_academy_users', 'registered_users', 'students'];
-        
-        keysToCheck.forEach(key => {
-            let data = localStorage.getItem(key);
-            if(data) {
-                try {
-                    let parsed = JSON.parse(data);
-                    if(Array.isArray(parsed)) {
-                        allUsers = allUsers.concat(parsed);
-                    } else if(parsed && typeof parsed === 'object') {
-                        // Kung may nested array tulad ng {users: [...]}
-                        for(let k in parsed) {
-                            if(Array.isArray(parsed[k])) {
-                                allUsers = allUsers.concat(parsed[k]);
-                            }
-                        }
-                    }
-                } catch(e){}
-            }
-        });
-
-        // Alisin ang duplicate base sa username o email
-        let uniqueUsers = [];
-        let seen = new Set();
-        allUsers.forEach(u => {
-            let identifier = u.username || u.email || u.name;
-            if(identifier && !seen.has(identifier)) {
-                seen.add(identifier);
-                uniqueUsers.push(u);
-            } else if(!identifier) {
-                uniqueUsers.push(u);
-            }
-        });
-
-        return uniqueUsers;
+        let data = localStorage.getItem('academy_users') || localStorage.getItem('users');
+        if(data) {
+            try {
+                let parsed = JSON.parse(data);
+                if(Array.isArray(parsed)) allUsers = parsed;
+                else if(parsed && Array.isArray(parsed.users)) allUsers = parsed.users;
+            } catch(e){}
+        }
+        return allUsers;
     }
 
     function loadStudentsData() {
@@ -212,23 +185,23 @@
             return;
         }
 
-        usersList.forEach((user, index) => {
+        usersList.forEach((user) => {
             let tr = document.createElement('tr');
             if(user.isBlocked) {
                 tr.className = 'blocked-row';
             }
 
             tr.innerHTML = `
-                <td>${user.name || user.fullName || user.fullname || 'N/A'}</td>
-                <td>${user.username || user.user || 'N/A'}</td>
-                <td><strong>${user.pin || user.password || user.pass || 'N/A'}</strong></td>
+                <td>${user.name || user.fullName || 'N/A'}</td>
+                <td>${user.username || 'N/A'}</td>
+                <td><strong>${user.pin || user.password || 'N/A'}</strong></td>
                 <td>${user.email || 'N/A'}</td>
-                <td>${user.cp || user.phone || user.contact || 'N/A'}</td>
-                <td>${user.codeUsed || user.code || user.accessCode || 'N/A'}</td>
+                <td>${user.cp || user.phone || 'N/A'}</td>
+                <td>${user.codeUsed || user.code || 'N/A'}</td>
                 <td>
                     ${user.isBlocked ? 
-                        <button class="btn-unblock" onclick="toggleBlock('${user.username || user.user}')">Unblock</button> : 
-                        <button class="btn-block" onclick="toggleBlock('${user.username || user.user}')">Block</button>
+                        <button class="btn-unblock" onclick="toggleBlock('${user.username}')">Unblock</button> : 
+                        <button class="btn-block" onclick="toggleBlock('${user.username}')">Block</button>
                     }
                 </td>
             `;
@@ -238,7 +211,7 @@
 
     function toggleBlock(username) {
         let usersList = getAllStudents();
-        let target = usersList.find(u => (u.username === username || u.user === username));
+        let target = usersList.find(u => u.username === username);
         if(target) {
             target.isBlocked = !target.isBlocked;
             localStorage.setItem('academy_users', JSON.stringify(usersList));
@@ -250,12 +223,11 @@
         let query = document.getElementById('searchInput').value.toLowerCase();
         let usersList = getAllStudents();
 
-        let filtered = usersList.filter(u => {
-            let name = (u.name || u.fullName || u.fullname || '').toLowerCase();
-            let uname = (u.username || u.user || '').toLowerCase();
-            let email = (u.email || '').toLowerCase();
-            return name.includes(query) || uname.includes(query) || email.includes(query);
-        });
+        let filtered = usersList.filter(u => 
+            (u.name && u.name.toLowerCase().includes(query)) || 
+            (u.username && u.username.toLowerCase().includes(query)) ||
+            (u.email && u.email.toLowerCase().includes(query))
+        );
 
         renderStudentTable(filtered);
     }
@@ -271,3 +243,7 @@
 
 </body>
 </html>
+Message will disappear in: 23h
+23h
+Compose
+Write to Karl Justin Sambayon-araño
