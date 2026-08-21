@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DC Social Academy - Dashboard</title>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+  <div class="dashboard-wrapper">
+    <!-- =========================================================================
+         DARK THEME SIDEBAR
+         ========================================================================= -->
+    <aside class="sidebar" id="sidebar">
+      <!-- Brand Logo -->
+      <div class="sidebar-brand">
+        <div class="brand-icon">
+          <i data-lucide="zap"></i>
+        </div>
+        <div class="brand-info">
+          <h2>DC Social</h2>
+          <span class="brand-badge">Academy</span>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="sidebar-nav">
+        <div class="nav-heading">Navigation</div>
+        
+        <button class="nav-tab active" data-tab="home" id="tabNavHome">
+          <i data-lucide="home"></i>
+          <span>Home</span>
+        </button>
+
+        <button class="nav-tab" data-tab="community" id="tabNavCommunity">
+          <i data-lucide="users"></i>
+          <span>Community</span>
+          <span class="nav-pill">New</span>
+        </button>
+
+        <button class="nav-tab" data-tab="settings" id="tabNavSettings">
+          <i data-lucide="settings"></i>
+          <span>Settings</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Footer with User Profile & Logout -->
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Creator Profile" class="user-avatar">
+          <div class="user-details">
+            <span class="user-name">Alex Rivera</span>
+            <span class="user-handle">@alexcreates</span>
+          </div>
+        </div>
+        <button class="logout-button" id="btnLogout" title="Sign out of DC Social Academy">
+          <i data-lucide="log-out"></i>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- =========================================================================
+         MAIN CONTENT AREA
+         ========================================================================= -->
+    <div class="main-wrapper">
+      <!-- Top Navigation Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Toggle menu">
+            <i data-lucide="menu"></i>
+          </button>
+          <div class="search-box">
+            <i data-lucide="search"></i>
+            <input type="text" id="searchInput" placeholder="Search modules, lessons, or topics...">
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Progress Summary -->
+          <div class="header-streak-badge">
+            <i data-lucide="flame" class="streak-icon"></i>
+            <span>5 Day Streak</span>
+          </div>
+
+          <div class="header-progress-chip">
+            <span class="progress-label">Overall Progress</span>
+            <div class="progress-bar-mini">
+              <div class="progress-fill-mini" id="headerProgressFill" style="width: 58%;"></div>
+            </div>
+            <span class="progress-percent" id="headerProgressText">58%</span>
+          </div>
+
+          <!-- Notification Button -->
+          <button class="header-icon-btn" id="btnNotification" title="Notifications">
+            <i data-lucide="bell"></i>
+            <span class="notification-dot"></span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Dynamic Content Views -->
+      <main class="content-container">
+        
+        <!-- =====================================================================
+             TAB 1: HOME VIEW (MODULES & LEARNING PATH)
+             ===================================================================== -->
+        <section class="tab-view active" id="homeView">
+          <!-- Hero Welcome Banner -->
+          <div class="hero-banner">
+            <div class="hero-text">
+              <span class="hero-tag">🚀 Creator Growth Accelerator</span>
+              <h1>Welcome to <span class="gradient-text">DC Social Academy</span></h1>
+              <p>Master modern social media creation, portfolio building, AI visuals, and viral distribution strategies.</p>
+            </div>
+            <div class="hero-stats">
+              <div class="stat-box">
+                <span class="stat-num" id="statCompleted">2</span>
+                <span class="stat-title">Completed</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-num" id="statInProgress">3</span>
+                <span class="stat-title">In Progress</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-num" id="statTotalPoints">450 XP</span>
+                <span class="stat-title">Earned</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Module Filter Bar -->
+          <div class="modules-header-bar">
+            <div>
+              <h2 class="section-heading">Core Academy Modules</h2>
+              <p class="section-subheading">Select a module to view lessons, resources, and hands-on projects.</p>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+              <button class="filter-tab active" data-filter="all">All Modules</button>
+              <button class="filter-tab" data-filter="in-progress">In Progress</button>
+              <button class="filter-tab" data-filter="completed">Completed</button>
+              <button class="filter-tab" data-filter="ai">AI & Design</button>
+              <button class="filter-tab" data-filter="content">Content & Growth</button>
+            </div>
+          </div>
+
+          <!-- Modules Cards Grid -->
+          <div class="modules-grid" id="modulesGrid">
+            
+            <!-- Module 1: How to Create Portfolio -->
+            <article class="module-card" data-module-id="portfolio" data-category="portfolio design" data-status="in-progress">
+              <div class="module-card-banner portfolio-gradient">
+                <span class="module-level-badge">Essential</span>
+                <div class="module-banner-icon">
+                  <i data-lucide="briefcase"></i>
+                </div>
+                <div class="module-duration">
+                  <i data-lucide="clock"></i> 45 mins • 5 Lessons
+                </div>
+              </div>
+              <div class="module-card-body">
+                <div class="module-category-tag">Portfolio & Branding</div>
+                <h3 class="module-title">How to Create Portfolio</h3>
+                <p class="module-desc">Design a high-converting creator portfolio, rate card, and case-study showcase to pitch to brands and clients.</p>
+                
+                <div class="module-progress-section">
+                  <div class="progress-meta">
+                    <span class="status-indicator in-progress">In Progress</span>
+                    <span class="progress-val">60%</span>
+                  </div>
+                  <div class="module-progress-bar">
+                    <div class="module-progress-fill" style="width: 60%;"></div>
+                  </div>
+                </div>
+
+                <div class="module-card-actions">
+                  <button class="btn-action primary btn-start-module" data-module="portfolio">
+                    <i data-lucide="play-circle"></i>
+                    <span>Continue Learning</span>
+                  </button>
+                  <button class="btn-action secondary btn-module-info" data-module="portfolio" title="Syllabus & Info">
+                    <i data-lucide="book-open"></i>
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <!-- Module 2: How to Create AI Photo -->
+            <article class="module-card" data-module-id="ai-photo" data-category="ai design" data-status="in-progress">
+              <div class="module-card-banner ai-gradient">
+                <span class="module-level-badge hot">Trending</span>
+                <div class="module-banner-icon">
+                  <i data-lucide="sparkles"></i>
+                </div>
+                <div class="module-duration">
+                  <i data-lucide="clock"></i> 60 mins • 7 Lessons
+                </div>
+              </div>
+              <div class="module-card-body">
+                <div class="module-category-tag">AI Visuals & Midjourney</div>
+                <h3 class="module-title">How to Create AI Photo</h3>
+                <p class="module-desc">Master generative AI prompt engineering, consistent character styles, photorealistic lighting, and viral social avatars.</p>
+                
+                <div class="module-progress-section">
+                  <div class="progress-meta">
+                    <span class="status-indicator in-progress">In Progress</span>
+                    <span class="progress-val">40%</span>
+                  </div>
+                  <div class="module-progress-bar">
+                    <div class="module-progress-fill" style="width: 40%;"></div>
+                  </div>
+                </div>
+
+                <div class="module-card-actions">
+                  <button class="btn-action primary btn-start-module" data-module="ai-photo">
+                    <i data-lucide="play-circle"></i>
+                    <span>Continue Learning</span>
+                  </button>
+                  <button class="btn-action secondary btn-module-info" data-module="ai-photo" title="Syllabus & Info">
+                    <i data-lucide="book-open"></i>
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <!-- Module 3: All About Content Creation -->
+            <article class="module-card" data-module-id="content-creation" data-category="content strategy" data-status="completed">
+              <div class="module-card-banner content-gradient">
+                <span class="module-level-badge complete">Completed</span>
+                <div class="module-banner-icon">
+                  <i data-lucide="video"></i>
+                </div>
+                <div class="module-duration">
+                  <i data-lucide="clock"></i> 90 mins • 9 Lessons
+                </div>
+              </div>
+              <div class="module-card-body">
+                <div class="module-category-tag">Viral Video & Storytelling</div>
+                <h3 class="module-title">All About Content Creation</h3>
+                <p class="module-desc">The complete blueprint from 3-second hook scripting and CapCut pacing to viral retention loops and multi-platform distribution.</p>
+                
+                <div class="module-progress-section">
+                  <div class="progress-meta">
+                    <span class="status-indicator completed">Completed ✓</span>
+                    <span class="progress-val">100%</span>
+                  </div>
+                  <div class="module-progress-bar">
+                    <div class="module-progress-fill complete" style="width: 100%;"></div>
+                  </div>
+                </div>
+
+                <div class="module-card-actions">
+                  <button class="btn-action primary btn-start-module" data-module="content-creation">
+                    <i data-lucide="rotate-ccw"></i>
+                    <span>Review Module</span>
+                  </button>
+                  <button class="btn-action secondary btn-module-info" data-module="content-creation" title="Syllabus & Info">
+                    <i data-lucide="book-open"></i>
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <!-- Module 4: Monetization & Brand Partnerships -->
+            <article class="module-card" data-module-id="monetization" data-category="strategy" data-status="completed">
+              <div class="module-card-banner monetization-gradient">
+                <span class="module-level-badge complete">Completed</span>
+                <div class="module-banner-icon">
+                  <i data-lucide="dollar-sign"></i>
+                </div>
+                <div class="module-duration">
+                  <i data-lucide="clock"></i> 50 mins • 6 Lessons
+                </div>
+              </div>
+              <div class="module-card-body">
+                <div class="module-category-tag">Creator Business</div>
+                <h3 class="module-title">Monetization & Sponsorships</h3>
+                <p class="module-desc">Learn how to calculate your CPM rates, pitch inbound/outbound brands, negotiate usage rights, and close 4-figure deals.</p>
+                
+                <div class="module-progress-section">
+                  <div class="progress-meta">
+                    <span class="status-indicator completed">Completed ✓</span>
+                    <span class="progress-val">100%</span>
+                  </div>
+                  <div class="module-progress-bar">
+                    <div class="module-progress-fill complete" style="width: 100%;"></div>
+                  </div>
+                </div>
+
+                <div class="module-card-actions">
+                  <button class="btn-action primary btn-start-module" data-module="monetization">
+                    <i data-lucide="rotate-ccw"></i>
+                    <span>Review Module</span>
+                  </button>
+                  <button class="btn-action secondary btn-module-info" data-module="monetization" title="Syllabus & Info">
+                    <i data-lucide="book-open"></i>
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <!-- Module 5: Instagram & Reels Algorithm Mastery -->
+            <article class="module-card" data-module-id="reels-algorithm" data-category="content strategy" data-status="in-progress">
+              <div class="module-card-banner algorithm-gradient">
+                <span class="module-level-badge">Advanced</span>
+                <div class="module-banner-icon">
+                  <i data-lucide="trending-up"></i>
+                </div>
+                <div class="module-duration">
+                  <i data-lucide="clock"></i> 55 mins • 6 Lessons
+                </div>
+              </div>
+              <div class="module-card-body">
+                <div class="module-category-tag">Social Algorithms</div>
+                <h3 class="module-title">Reels & TikTok Algorithm SEO</h3>
+                <p class="module-desc">Demystify algorithmic indexing, discoverability signals, trending audio timing, and keyword metadata hacks.</p>
+                
+                <div class="module-progress-section">
+                  <div class="progress-meta">
+                    <span class="status-indicator in-progress">In Progress</span>
+                    <span class="progress-val">30%</span>
+                  </div>
+                  <div class="module-progress-bar">
+                    <div class="module-progress-fill" style="width: 30%;"></div>
+                  </div>
+                </div>
+
+                <div class="module-card-actions">
+                  <button class="btn-action primary btn-start-module" data-module="reels-algorithm">
+                    <i data-lucide="play-circle"></i>
+                    <span>Continue Learning</span>
+                  </button>
+                  <button class="btn-action secondary btn-module-info" data-module="reels-algorithm" title="Syllabus & Info">
+                    <i data-lucide="book-open"></i>
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <!-- Module 6: Creative Lighting & Smartphone Cinematography -->
+            <article class="module-card" data-module-id="cinematography" data-category="ai design" data-status="not-started">
+              <div class="module-card-banner cinema-gradient">
+                <span class="module-level-badge">New</span>
+                <div class="module-banner-icon">
+                  <i data-lucide="camera"></i>
+                </div>
+                <div class="module-duration">
+                  <i data-lucide="clock"></i> 40 mins • 4 Lessons
+                </div>
+              </div>
+              <div class="module-card-body">
+                <div class="module-category-tag">Production Setup</div>
+                <h3 class="module-title">Mobile Video Production</h3>
+                <p class="module-desc">Studio lighting on a budget, 4K camera settings, lavalier microphone acoustics, and seamless b-roll workflows.</p>
+                
+                <div class="module-progress-section">
+                  <div class="progress-meta">
+                    <span class="status-indicator not-started">Not Started</span>
+                    <span class="progress-val">0%</span>
+                  </div>
+                  <div class="module-progress-bar">
+                    <div class="module-progress-fill" style="width: 0%;"></div>
+                  </div>
+                </div>
+
+                <div class="module-card-actions">
+                  <button class="btn-action primary btn-start-module" data-module="cinematography">
+                    <i data-lucide="play-circle"></i>
+                    <span>Start Module</span>
+                  </button>
+                  <button class="btn-action secondary btn-module-info" data-module="cinematography" title="Syllabus & Info">
+                    <i data-lucide="book-open"></i>
+                  </button>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </section>
+
+        <!-- =====================================================================
+             TAB 2: COMMUNITY VIEW
+             ===================================================================== -->
+        <section class="tab-view" id="communityView">
+          <div class="community-header">
+            <div>
+              <h2 class="section-heading">DC Creator Community</h2>
+              <p class="section-subheading">Share your portfolios, AI photo generations, and collaborate with peer creators.</p>
+            </div>
+            <button class="btn-action primary" id="btnNewCommunityPost">
+              <i data-lucide="plus-circle"></i>
+              <span>Create Post</span>
+            </button>
+          </div>
+
+          <!-- New Post Composer Box -->
+          <div class="post-composer-card">
+            <div class="composer-top">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Avatar" class="composer-avatar">
+              <textarea id="composerInput" placeholder="Share your latest AI photo prompt or portfolio link with the academy..." rows="2"></textarea>
+            </div>
+            <div class="composer-actions">
+              <div class="composer-tags">
+                <span class="tag-pill" data-tag="portfolio">#PortfolioReview</span>
+                <span class="tag-pill" data-tag="ai-photo">#AIPhotoPrompt</span>
+                <span class="tag-pill" data-tag="content">#ContentGrowth</span>
+              </div>
+              <button class="btn-action primary btn-sm" id="btnPublishPost">Post Update</button>
+            </div>
+          </div>
+
+          <!-- Community Posts Feed -->
+          <div class="community-feed" id="communityFeed">
+            
+            <!-- Post 1 -->
+            <article class="feed-post-card">
+              <div class="post-author-row">
+                <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&auto=format&fit=crop&q=80" alt="Julian" class="post-author-avatar">
+                <div class="post-author-info">
+                  <h4>Julian Hayes <span class="badge-creator">Cohort #4</span></h4>
+                  <span class="post-time">2 hours ago • in #AIPhotoPrompt</span>
+                </div>
+              </div>
+              <div class="post-content">
+                <p>Just finished the <strong>How to Create AI Photo</strong> module! Used the Midjourney v6 lighting prompt from Lesson 4 and got these photorealistic results for my creator avatar. 📸✨</p>
+                <div class="post-image-preview ai-prompt-bg">
+                  <div class="prompt-badge">Prompt: Cinematic editorial portrait, 85mm lens, rim lighting --v 6.0</div>
+                </div>
+              </div>
+              <div class="post-footer">
+                <button class="post-interaction-btn like-btn" data-liked="false">
+                  <i data-lucide="heart"></i>
+                  <span class="like-count">24</span> Likes
+                </button>
+                <button class="post-interaction-btn comment-toggle-btn">
+                  <i data-lucide="message-square"></i>
+                  <span>5 Comments</span>
+                </button>
+                <button class="post-interaction-btn share-btn">
+                  <i data-lucide="share-2"></i>
+                  <span>Share</span>
+                </button>
+              </div>
+            </article>
+
+            <!-- Post 2 -->
+            <article class="feed-post-card">
+              <div class="post-author-row">
+                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80" alt="Mia" class="post-author-avatar">
+                <div class="post-author-info">
+                  <h4>Mia Lindqvist <span class="badge-creator">Verified Student</span></h4>
+                  <span class="post-time">5 hours ago • in #PortfolioReview</span>
+                </div>
+              </div>
+              <div class="post-content">
+                <p>Applied the case-study framework from <strong>How to Create Portfolio</strong> to my media kit, and I just landed my first $1,500 brand collaboration with a tech startup! Thank you DC Social Academy!</p>
+              </div>
+              <div class="post-footer">
+                <button class="post-interaction-btn like-btn" data-liked="false">
+                  <i data-lucide="heart"></i>
+                  <span class="like-count">58</span> Likes
+                </button>
+                <button class="post-interaction-btn comment-toggle-btn">
+                  <i data-lucide="message-square"></i>
+                  <span>12 Comments</span>
+                </button>
+                <button class="post-interaction-btn share-btn">
+                  <i data-lucide="share-2"></i>
+                  <span>Share</span>
+                </button>
+              </div>
+            </article>
+
+          </div>
+        </section>
+
+        <!-- =====================================================================
+             TAB 3: SETTINGS VIEW
+             ===================================================================== -->
+        <section class="tab-view" id="settingsView">
+          <div class="settings-header">
+            <h2 class="section-heading">Academy Settings & Profile</h2>
+            <p class="section-subheading">Manage your account preferences, creator bio, and notification settings.</p>
+          </div>
+
+          <div class="settings-grid">
+            <!-- Profile Settings Card -->
+            <div class="settings-card">
+              <h3 class="card-section-title"><i data-lucide="user"></i> Creator Profile</h3>
+              <form id="profileSettingsForm">
+                <div class="form-group">
+                  <label for="fullName">Full Name</label>
+                  <input type="text" id="fullName" value="Alex Rivera" required>
+                </div>
+                <div class="form-group">
+                  <label for="handle">Social Handle</label>
+                  <input type="text" id="handle" value="@alexcreates" required>
+                </div>
+                <div class="form-group">
+                  <label for="bio">Creator Bio</label>
+                  <textarea id="bio" rows="3">Visual storyteller, AI enthusiast, and digital creator exploring short-form video & visual branding.</textarea>
+                </div>
+                <div class="form-group">
+                  <label for="portfolioLink">Portfolio URL</label>
+                  <input type="url" id="portfolioLink" value="https://alexcreates.design">
+                </div>
+                <button type="submit" class="btn-action primary">Save Profile</button>
+              </form>
+            </div>
+
+            <!-- Preferences Card -->
+            <div class="settings-card">
+              <h3 class="card-section-title"><i data-lucide="sliders"></i> Learning Preferences</h3>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <span class="toggle-title">Email Lesson Reminders</span>
+                  <span class="toggle-desc">Receive weekly digests on unfinished modules.</span>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" checked id="prefEmail">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <span class="toggle-title">AI Prompt Updates</span>
+                  <span class="toggle-desc">Get notifications when new Midjourney & SD prompts are added.</span>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" checked id="prefAIPrompts">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <span class="toggle-title">Community DM & Replies</span>
+                  <span class="toggle-desc">Alert when someone responds to your portfolio thread.</span>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" checked id="prefCommunity">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+
+              <div class="danger-zone">
+                <h4>Danger Zone</h4>
+                <p>Reset your course progress or deactivate account.</p>
+                <button class="btn-action danger" id="btnResetProgress">Reset Module Progress</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       INTERACTIVE MODULE VIEWER MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="moduleModal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-badge" id="modalBadge">Module</span>
+          <h2 id="modalModuleTitle">How to Create Portfolio</h2>
+        </div>
+        <button class="close-btn" id="btnCloseModuleModal" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="modal-content-grid">
+        <!-- Interactive Player Area -->
+        <div class="modal-player-area">
+          <div class="mock-player" id="mockPlayer">
+            <div class="player-overlay">
+              <i data-lucide="play" class="player-play-icon" id="playerPlayIcon"></i>
+              <span id="currentLessonTitle">Lesson 1: Portfolio Structure & Brand Identity</span>
+            </div>
+          </div>
+          <div class="player-info-card">
+            <h4 id="lessonHeader">Overview & Key Objectives</h4>
+            <p id="lessonDescription">In this interactive lesson, learn how to curate your best 5 projects, structure client testimonials, and design a media kit that converts brands into high-paying partnerships.</p>
+            <div class="lesson-actions-bar">
+              <button class="btn-action success" id="btnToggleComplete">
+                <i data-lucide="check-circle"></i>
+                <span id="completeBtnText">Mark Lesson as Complete</span>
+              </button>
+              <button class="btn-action secondary" id="btnDownloadResources">
+                <i data-lucide="download"></i>
+                <span>Download Templates (.PDF)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lesson Syllabus Playlist -->
+        <div class="modal-syllabus-panel">
+          <div class="syllabus-header">
+            <h3>Module Syllabus</h3>
+            <span class="syllabus-progress" id="syllabusProgress">3 / 5 Done</span>
+          </div>
+          <div class="syllabus-list" id="syllabusList">
+            <!-- Dynamic lesson items loaded via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       LOGOUT CONFIRMATION MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="logoutModal">
+    <div class="modal-window small-modal">
+      <div class="modal-header">
+        <h3>Sign Out</h3>
+        <button class="close-btn" id="btnCloseLogoutModal">&times;</button>
+      </div>
+      <div class="modal-body-p">
+        <p>Are you sure you want to sign out of <strong>DC Social Academy</strong>? Your course progress will remain saved.</p>
+      </div>
+      <div class="modal-actions-right">
+        <button class="btn-action secondary" id="btnCancelLogout">Cancel</button>
+        <button class="btn-action danger" id="btnConfirmLogout">Logout Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>
