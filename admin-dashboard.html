@@ -126,7 +126,7 @@
                             </tr>
                         </thead>
                         <tbody id="studentTableBody">
-                            <!-- Dynamic via JS -->
+                            <!-- Dynamic via Firebase JS -->
                         </tbody>
                     </table>
                 </div>
@@ -134,18 +134,35 @@
         </div>
     </div>
 
-<script>
+<!-- Firebase SDKs -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addFirestoreDoc, getDocs, setDoc, doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Palitan ito ng tamang Firebase configuration mula sa iyong Firebase Project Settings kung kinakailangan
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "dc-social-academy.firebaseapp.com",
+        projectId: "dc-social-academy",
+        storageBucket: "dc-social-academy.appspot.com",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
     if (localStorage.getItem('current_admin') !== 'true') {
         window.location.href = 'index.html';
     }
 
-    function logoutAdmin() {
+    window.logoutAdmin = function() {
         localStorage.removeItem('current_admin');
         window.location.href = 'index.html';
     }
 
-    // 1. I-save ang Code at PIN nang walang sablay
-    document.getElementById('saveCodeBtn').addEventListener('click', function() {
+    // 1. I-save ang Code at PIN sa Firestore
+    document.getElementById('saveCodeBtn').addEventListener('click', async function() {
         const codeInput = document.getElementById('gen-code');
         const pinInput = document.getElementById('gen-pin');
         
@@ -158,61 +175,60 @@
         }
 
         try {
-            let codes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
-            
-            if(codes.some(item => item.code === code)) {
+            // Gamitin ang code mismo bilang document ID para maiwasan ang duplicate
+            const codeRef = doc(db, "generated_codes", code);
+            const docSnap = await getDoc(codeRef);
+
+            if (docSnap.exists()) {
                 alert("Ang Access Code na ito ay umiiral na!");
                 return;
             }
 
-            codes.push({ code: code, pin: pin });
-            localStorage.setItem('generated_codes', JSON.stringify(codes));
+            await setDoc(codeRef, { code: code, pin: pin, createdAt: new Date().toISOString() });
 
             codeInput.value = '';
             pinInput.value = '';
-            alert("Tagumpay na nai-save ang Code at PIN!");
+            alert("Tagumpay na nai-save ang Code at PIN sa Cloud Firestore!");
         } catch (error) {
             alert("Nagkaroon ng problema sa pag-save: " + error.message);
         }
     });
 
-    // 2. Basahin nang tama ang estudyante mula sa 'academy_users' object format ng iyong registration page
-    function loadStudents() {
+    // 2. Basahin ang mga naka-register na estudyante mula sa Firestore 'academy_users' collection
+    async function loadStudents() {
         let tableBody = document.getElementById('studentTableBody');
-        let allStudents = [];
+        tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#777;">Nag-a-load ng data mula sa cloud...</td></tr>';
 
-        let savedData = localStorage.getItem('academy_users');
-        if (savedData) {
-            try {
-                let parsed = JSON.parse(savedData);
-                if (parsed.users && Array.isArray(parsed.users)) {
-                    allStudents = parsed.users;
-                } else if (Array.isArray(parsed)) {
-                    allStudents = parsed;
-                }
-            } catch (e) {}
+        try {
+            const querySnapshot = await getDocs(collection(db, "academy_users"));
+            let allStudents = [];
+            querySnapshot.forEach((doc) => {
+                allStudents.push({ id: doc.id, ...doc.data() });
+            });
+
+            tableBody.innerHTML = '';
+
+            if (allStudents.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#777;">Wala pang naka-register na estudyante.</td></tr>';
+                return;
+            }
+
+            allStudents.forEach((student) => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${student.name || 'N/A'}</td>
+                    <td>${student.username || 'N/A'}</td>
+                    <td><strong>${student.pin || 'N/A'}</strong></td>
+                    <td>${student.email || 'N/A'}</td>
+                    <td>${student.cp || 'N/A'}</td>
+                    <td>${student.codeUsed || 'N/A'}</td>
+                    <td><button class="btn-block" style="background:#ff4d4d; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;" onclick="alert('Feature coming soon!')">Block</button></td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        } catch (error) {
+            tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:red;">May error sa pagkarga ng data: ${error.message}</td></tr>`;
         }
-
-        tableBody.innerHTML = '';
-
-        if (allStudents.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#777;">Wala pang naka-register na estudyante.</td></tr>';
-            return;
-        }
-
-        allStudents.forEach((student) => {
-            let tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${student.name || 'N/A'}</td>
-                <td>${student.username || 'N/A'}</td>
-                <td><strong>${student.pin || 'N/A'}</strong></td>
-                <td>${student.email || 'N/A'}</td>
-                <td>${student.cp || 'N/A'}</td>
-                <td>${student.codeUsed || 'N/A'}</td>
-                <td><button class="btn-block" style="background:#ff4d4d; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Block</button></td>
-            `;
-            tableBody.appendChild(tr);
-        });
     }
 
     window.onload = loadStudents;
