@@ -9,7 +9,7 @@
     body { display: flex; height: 100vh; background: #f7f5ef; overflow: hidden; }
 
     /* Sidebar */
-    .sidebar { width: 280px; background: #171717; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 25px 15px; }
+    .sidebar { width: 280px; background: #171717; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 25px 15px; flex-shrink: 0; transition: 0.3s; }
     .sidebar-top .logo { color: #d5a22b; font-size: 32px; font-weight: 900; letter-spacing: -2px; margin-bottom: 2px; }
     .sidebar-top .logo-sub { font-size: 12px; color: #aaa; margin-bottom: 20px; }
     
@@ -20,12 +20,12 @@
     .logout-btn:hover { background: #ff6b6b; color: white; }
 
     /* Main Content Area */
-    .main-container { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-    .header { background: white; padding: 20px 40px; border-bottom: 1px solid #e1e4e8; display: flex; justify-content: space-between; align-items: center; }
+    .main-container { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
+    .header { background: white; padding: 20px 40px; border-bottom: 1px solid #e1e4e8; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
     .header h1 { font-size: 22px; color: #171717; }
     .admin-badge { background: #fbf5e5; color: #d5a22b; padding: 6px 15px; border-radius: 20px; font-weight: bold; font-size: 13px; border: 1px solid #e7d7ad; }
 
-    .content-body { padding: 30px 40px; display: flex; flex-direction: column; gap: 20px; max-width: 1200px; }
+    .content-body { padding: 30px 40px; display: flex; flex-direction: column; gap: 20px; max-width: 1200px; width: 100%; }
 
     .card { background: white; padding: 25px; border-radius: 12px; border: 1px solid #e1e4e8; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
     .card h3 { font-size: 16px; color: #171717; margin-bottom: 15px; border-bottom: 2px solid #f7f5ef; padding-bottom: 8px; }
@@ -34,7 +34,7 @@
     .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
     .input-group { flex: 1; display: flex; flex-direction: column; gap: 5px; }
     .input-group label { font-size: 12px; font-weight: bold; color: #444; }
-    .input-group input { padding: 10px 12px; background: #faf9f6; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; outline: none; }
+    .input-group input { padding: 10px 12px; background: #faf9f6; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; outline: none; width: 100%; }
     .input-group input:focus { border-color: #d5a22b; background: white; }
     .btn-save { background: #d5a22b; color: black; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
     .btn-save:hover { background: #c29122; }
@@ -44,20 +44,39 @@
     .search-box input { flex: 1; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; outline: none; }
     .btn-search { background: #171717; color: #d5a22b; border: 1px solid #d5a22b; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
     
-    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; white-space: nowrap; }
     th { background: #faf9f6; color: #444; padding: 10px; border-bottom: 1px solid #ddd; }
     td { padding: 10px; border-bottom: 1px solid #eee; color: #333; }
+
+    /* MOBILE RESPONSIVE MEDIA QUERY */
+    @media (max-width: 900px) {
+        body { flex-direction: column; height: auto; overflow: auto; }
+        .sidebar { width: 100%; height: auto; flex-direction: row; align-items: center; padding: 15px 20px; flex-wrap: wrap; gap: 10px; }
+        .sidebar-top { display: flex; align-items: center; gap: 15px; width: 100%; justify-content: space-between; }
+        .sidebar-top .logo { font-size: 24px; margin-bottom: 0; }
+        .sidebar-top .logo-sub { display: none; }
+        .sidebar-top .nav-btn { display: inline-block; margin-bottom: 0; padding: 8px 12px; font-size: 12px; }
+        .logout-btn { margin-top: 0; padding: 8px 12px; font-size: 12px; width: 100%; text-align: center; }
+        .main-container { height: auto; overflow: visible; }
+        .header { padding: 15px 20px; flex-direction: column; align-items: flex-start; gap: 10px; }
+        .content-body { padding: 20px; }
+        .form-row { flex-direction: column; gap: 15px; }
+    }
 </style>
 </head>
 <body>
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <div class="sidebar-top">
-            <div class="logo">DC</div>
-            <div class="logo-sub">SOCIAL ACADEMY</div>
-            <a href="admin-dashboard.html" class="nav-btn">Admin Panel</a>
-            <a href="code.html" class="nav-btn" style="background: #222; color: #d5a22b; border: 1px solid #d5a22b;">CODE (Listahan)</a>
+        <div class="sidebar-top" style="display: flex; align-items: center; width: 100%;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="logo">DC</div>
+                <div class="logo-sub" style="margin-bottom:0;">SOCIAL ACADEMY</div>
+            </div>
+            <div style="display: flex; gap: 5px;">
+                <a href="admin-dashboard.html" class="nav-btn" style="margin-bottom:0;">Panel</a>
+                <a href="code.html" class="nav-btn" style="background: #222; color: #d5a22b; border: 1px solid #d5a22b; margin-bottom:0;">CODE</a>
+            </div>
         </div>
         <div class="logout-btn" onclick="logoutAdmin()">Logout</div>
     </div>
@@ -141,7 +160,6 @@
         try {
             let codes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
             
-            // Suriin kung may kapareho na
             if(codes.some(item => item.code === code)) {
                 alert("Ang Access Code na ito ay umiiral na!");
                 return;
@@ -167,7 +185,6 @@
         if (savedData) {
             try {
                 let parsed = JSON.parse(savedData);
-                // Sinusuportahan pareho ang { users: [...] } o tuwirang array [...]
                 if (parsed.users && Array.isArray(parsed.users)) {
                     allStudents = parsed.users;
                 } else if (Array.isArray(parsed)) {
