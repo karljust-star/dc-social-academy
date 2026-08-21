@@ -43,17 +43,10 @@
     .search-box { margin-bottom: 15px; display: flex; gap: 10px; }
     .search-box input { flex: 1; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; outline: none; }
     .btn-search { background: #171717; color: #d5a22b; border: 1px solid #d5a22b; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
-    .btn-search:hover { background: #333; }
     
     table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
     th { background: #faf9f6; color: #444; padding: 10px; border-bottom: 1px solid #ddd; }
     td { padding: 10px; border-bottom: 1px solid #eee; color: #333; }
-    
-    .btn-block { background: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
-    .btn-block:hover { background: #cc0000; }
-    .btn-unblock { background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
-    .btn-unblock:hover { background: #1e7e34; }
-    .blocked-row { background-color: #ffeeee !important; }
 </style>
 </head>
 <body>
@@ -90,15 +83,15 @@
                         <input type="text" id="gen-pin" placeholder="Halimbawa: 12345">
                     </div>
                 </div>
-                <button class="btn-save" onclick="saveCode()">I-save ang Code at PIN</button>
+                <button class="btn-save" id="saveCodeBtn">I-save ang Code at PIN</button>
             </div>
 
             <!-- 2. Student List Box -->
             <div class="card">
                 <h3>Listahan ng mga Naka-register na Estudyante</h3>
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Hanapin ang pangalan o username..." onkeypress="handleSearchKey(event)">
-                    <button class="btn-search" onclick="filterStudents()">Hanapin</button>
+                    <input type="text" id="searchInput" placeholder="Hanapin ang pangalan o username...">
+                    <button class="btn-search" id="searchBtn">Hanapin</button>
                 </div>
                 <div style="overflow-x: auto;">
                     <table>
@@ -114,7 +107,7 @@
                             </tr>
                         </thead>
                         <tbody id="studentTableBody">
-                            <!-- Dynamic via JS -->
+                            <tr><td colspan="7" style="text-align:center; color:#777;">Wala pang naka-register na estudyante.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -132,113 +125,43 @@
         window.location.href = 'index.html';
     }
 
-    function saveCode() {
-        const code = document.getElementById('gen-code').value.trim();
-        const pin = document.getElementById('gen-pin').value.trim();
+    // Direktang event listener sa halip na onclick attribute para hindi ma-block
+    document.getElementById('saveCodeBtn').addEventListener('click', function() {
+        const codeInput = document.getElementById('gen-code');
+        const pinInput = document.getElementById('gen-pin');
+        
+        const code = codeInput.value.trim();
+        const pin = pinInput.value.trim();
 
         if(!code || !pin) {
             alert("Pakilagay ang Access Code at PIN!");
             return;
         }
 
-        let codes = JSON.parse(localStorage.getItem('generated_codes') || '[]');
-        
-        // Suriin kung may kapareho na
-        if(codes.some(item => item.code === code)) {
-            alert("Ang Access Code na ito ay umiiral na!");
-            return;
-        }
-
-        codes.push({ code: code, pin: pin });
-        localStorage.setItem('generated_codes', JSON.stringify(codes));
-
-        document.getElementById('gen-code').value = '';
-        document.getElementById('gen-pin').value = '';
-
-        alert("Tagumpay na nai-save ang Code at PIN!");
-    }
-
-    function getAllStudents() {
-        let allUsers = [];
-        let data = localStorage.getItem('academy_users') || localStorage.getItem('users');
-        if(data) {
-            try {
-                let parsed = JSON.parse(data);
-                if(Array.isArray(parsed)) allUsers = parsed;
-                else if(parsed && Array.isArray(parsed.users)) allUsers = parsed.users;
-            } catch(e){}
-        }
-        return allUsers;
-    }
-
-    function loadStudentsData() {
-        let usersList = getAllStudents();
-        renderStudentTable(usersList);
-    }
-
-    function renderStudentTable(usersList) {
-        let tableBody = document.getElementById('studentTableBody');
-        tableBody.innerHTML = '';
-
-        if(usersList.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#777;">Wala pang naka-register na estudyante.</td></tr>';
-            return;
-        }
-
-        usersList.forEach((user) => {
-            let tr = document.createElement('tr');
-            if(user.isBlocked) {
-                tr.className = 'blocked-row';
+        try {
+            // Kunin ang kasalukuyang codes o gumawa ng bagong listahan
+            let existingCodes = localStorage.getItem('generated_codes');
+            let codes = [];
+            
+            if (existingCodes) {
+                codes = JSON.parse(existingCodes);
             }
 
-            tr.innerHTML = `
-                <td>${user.name || user.fullName || 'N/A'}</td>
-                <td>${user.username || 'N/A'}</td>
-                <td><strong>${user.pin || user.password || 'N/A'}</strong></td>
-                <td>${user.email || 'N/A'}</td>
-                <td>${user.cp || user.phone || 'N/A'}</td>
-                <td>${user.codeUsed || user.code || 'N/A'}</td>
-                <td>
-                    ${user.isBlocked ? 
-                        <button class="btn-unblock" onclick="toggleBlock('${user.username}')">Unblock</button> : 
-                        <button class="btn-block" onclick="toggleBlock('${user.username}')">Block</button>
-                    }
-                </td>
-            `;
-            tableBody.appendChild(tr);
-        });
-    }
+            // I-push ang bagong code
+            codes.push({ code: code, pin: pin });
+            
+            // I-save pabalik sa localStorage
+            localStorage.setItem('generated_codes', JSON.stringify(codes));
 
-    function toggleBlock(username) {
-        let usersList = getAllStudents();
-        let target = usersList.find(u => u.username === username);
-        if(target) {
-            target.isBlocked = !target.isBlocked;
-            localStorage.setItem('academy_users', JSON.stringify(usersList));
-            loadStudentsData();
+            // Linisin ang input fields
+            codeInput.value = '';
+            pinInput.value = '';
+
+            alert("Tagumpay na nai-save ang Code at PIN!");
+        } catch (error) {
+            alert("Nagkaroon ng problema sa pag-save: " + error.message);
         }
-    }
-
-    function filterStudents() {
-        let query = document.getElementById('searchInput').value.toLowerCase();
-        let usersList = getAllStudents();
-
-        let filtered = usersList.filter(u => 
-            (u.name && u.name.toLowerCase().includes(query)) || 
-            (u.username && u.username.toLowerCase().includes(query)) ||
-            (u.email && u.email.toLowerCase().includes(query))
-        );
-
-        renderStudentTable(filtered);
-    }
-
-    function handleSearchKey(event) {
-        if (event.key === 'Enter') {
-            filterStudents();
-        }
-    }
-
-    window.onload = loadStudentsData;
+    });
 </script>
 
 </body>
